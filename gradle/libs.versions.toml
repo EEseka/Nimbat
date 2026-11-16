@@ -1,4 +1,7 @@
 [versions]
+app-versionName = "1.0.0"
+app-versionCode = "1"
+
 agp = "9.5.1"
 android-compileSdk = "37"
 android-minSdk = "24"
@@ -15,7 +18,6 @@ material3 = "1.12.0-alpha03"
 kotlinx-coroutines = "1.11.0"
 
 [libraries]
-kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "compose-lifecycle" }
 androidx-lifecycle-runtimeCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-runtime-compose", version.ref = "compose-lifecycle" }
