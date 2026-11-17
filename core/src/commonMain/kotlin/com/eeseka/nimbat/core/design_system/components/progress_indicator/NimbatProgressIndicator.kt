@@ -1,0 +1,32 @@
+package com.eeseka.nimbat.core.design_system.components.progress_indicator
+
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
+import com.mohamedrejeb.calf.ui.progress.AdaptiveCircularProgressIndicator
+
+@Composable
+fun NimbatProgressIndicator(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.primary,
+    strokeWidth: Dp = 4.dp
+) {
+    AdaptiveCircularProgressIndicator(
+        modifier = modifier,
+        color = color,
+        strokeWidth = strokeWidth
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun NimbatProgressIndicatorPreview() {
+    NimbatTheme {
+        NimbatProgressIndicator()
+    }
+}

@@ -6,15 +6,6 @@ plugins {
     alias(libs.plugins.composeCompiler)
 }
 
-dependencies {
-    implementation(project(":shared"))
-
-    implementation(compose.desktop.currentOs)
-    implementation(libs.kotlinx.coroutines.swing)
-
-    implementation(libs.compose.uiToolingPreview)
-}
-
 compose.desktop {
     application {
         mainClass = "com.eeseka.nimbat.MainKt"
@@ -22,7 +13,14 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.eeseka.nimbat"
-            packageVersion = "1.0.0"
+            packageVersion = libs.versions.app.versionName.get()
         }
     }
+}
+
+dependencies {
+    implementation(projects.shared)
+
+    implementation(compose.desktop.currentOs)
+    implementation(libs.kotlinx.coroutines.swing)
 }
