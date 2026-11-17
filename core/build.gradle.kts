@@ -29,6 +29,7 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
             implementation(libs.compose.uiTooling)
         }
         commonMain.dependencies {
@@ -41,6 +42,17 @@ kotlin {
 
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+
+            implementation(libs.bundles.koin.common)
+
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.collections.immutable)
+
+            implementation(libs.icons.lucide.cmp)
+
+            implementation(libs.material3.adaptive)
+
+            implementation(libs.adaptive.ui)
         }
     }
 }
