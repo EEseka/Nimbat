@@ -22,5 +22,6 @@ dependencies {
     implementation(projects.shared)
 
     implementation(compose.desktop.currentOs)
+    implementation(libs.compose.components.resources)
     implementation(libs.kotlinx.coroutines.swing)
 }

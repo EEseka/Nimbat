@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Nimbat.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#17111C</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/nimbat_logo</item>
+        <item name="postSplashScreenTheme">@android:style/Theme.Material.NoActionBar</item>
+    </style>
+</resources>
