@@ -5,3 +5,16 @@ html, body {
     padding: 0;
     overflow: hidden;
 }
+
+/* Splash shown while the app downloads; Compose covers it once it starts */
+body {
+    text-align: center;
+    align-content: center;
+    background-color: #FFF7FD;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #17111C;
+    }
+}
