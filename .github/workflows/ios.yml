@@ -1,0 +1,63 @@
+name: KMP iOS Pipeline
+
+# Runs the same commonTest code on an iOS simulator, then builds the iOS app. A macOS runner is slow, so this
+# waits for a pull request into main instead of running on every push.
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Test and Build iOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      # The Kotlin/Native compiler and its libraries, so they are downloaded once instead of every run
+      - name: Cache Kotlin Native
+        uses: actions/cache@v6
+        with:
+          path: ~/.konan
+          key: konan-${{ runner.os }}-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: konan-${{ runner.os }}-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: List available simulators
+        run: xcrun simctl list devices available
+
+      - name: Run Unit Tests on the iOS Simulator
+        run: ./gradlew iosSimulatorArm64Test
+
+      # Unsigned because signing needs an Apple Developer account. arm64 only because the Kotlin
+      # framework is only built for Apple Silicon simulators. Indexing off because CI never needs it.
+      - name: Build the iOS App for the Simulator
+        run: >
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp
+          -configuration Debug -destination 'generic/platform=iOS Simulator' ARCHS=arm64
+          CODE_SIGNING_ALLOWED=NO COMPILER_INDEX_STORE_ENABLE=NO build
+
+      - name: Upload Test Report
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: ios-test-report
+          path: "**/build/reports/tests/**"
+          retention-days: 7
