@@ -36,5 +36,7 @@ plugins {
 include(":core")
 include(":androidApp")
 include(":desktopApp")
+include(":sound")
+include(":testing")
 include(":shared")
 include(":webApp")
