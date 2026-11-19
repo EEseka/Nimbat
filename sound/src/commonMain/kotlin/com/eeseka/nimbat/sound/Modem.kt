@@ -32,10 +32,13 @@ private const val TONES_PER_BANK = 16
 
 /**
  * The lowest tone, as an FFT slot of one symbol. Each slot is 48,000 ÷ 2,048 ≈ 23.4 Hz wide, so slot 750 is
- * ≈ 17,578 Hz. Every tone sits exactly on a slot, so it fits a whole number of cycles in one symbol: it starts
- * and ends at 0 (no click) and the FFT sees it as one clean tone.
+ * ≈ 17,578 Hz. Every tone sits exactly on a slot, so it fits a whole number of cycles in one symbol and the FFT
+ * sees it as one clean tone.
  */
 private const val FIRST_SLOT = 750
+
+/** Each symbol fades in and out over 240 samples (5 ms); a sudden jump to the next tone ticks audibly. */
+private const val SYMBOL_FADE_SIZE = 240
 
 /** Slots between neighbouring tones: 4 ≈ 94 Hz, so a tone stays in its own slot even if the timing is off a bit. */
 private const val SLOT_STEP = 4
@@ -70,8 +73,9 @@ fun transmit(bytes: ByteArray): FloatArray {
     chirp.copyInto(samples)
 
     frame.toNibbles().forEachIndexed { symbol, nibble ->
-        loopingTone(cycles = slotFor(symbol, nibble), sampleCount = SYMBOL_SIZE)
-            .copyInto(samples, destinationOffset = dataStart + symbol * SYMBOL_SIZE)
+        val tone = loopingTone(cycles = slotFor(symbol, nibble), sampleCount = SYMBOL_SIZE)
+        fadeEdges(samples = tone, fadeSamples = SYMBOL_FADE_SIZE)
+        tone.copyInto(samples, destinationOffset = dataStart + symbol * SYMBOL_SIZE)
     }
     return samples
 }

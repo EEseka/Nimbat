@@ -50,4 +50,6 @@ dependencies {
     implementation(libs.androidx.activity.compose)
 
     implementation(libs.core.splashscreen)
+
+    implementation(libs.bundles.koin.common)
 }

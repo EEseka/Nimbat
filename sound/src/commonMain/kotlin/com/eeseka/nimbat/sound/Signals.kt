@@ -11,6 +11,9 @@ const val SAMPLE_RATE = 48_000
 /** How long a tone takes to fade in and out, so the speaker doesn't click. */
 const val TONE_FADE_SECONDS = 0.01
 
+/** How long a loop takes to fade in when it starts and out when it stops, so the speaker doesn't click. */
+const val LOOP_FADE_SECONDS = 0.02
+
 /** How many samples [durationSeconds] of sound takes, e.g. 0.05 s → 2,400. */
 fun sampleCountFor(durationSeconds: Double): Int = (durationSeconds * SAMPLE_RATE).roundToInt()
 
@@ -43,6 +46,22 @@ fun loopingTone(cycles: Int, sampleCount: Int): FloatArray {
     val frequencyHz = cycles.toDouble() * SAMPLE_RATE / sampleCount
     return rawWave(startHz = frequencyHz, endHz = frequencyHz, sampleCount = sampleCount)
 }
+
+/** A copy of a looping [block] that fades in from silence: the loop's first pass. */
+fun loopFadeIn(block: FloatArray): FloatArray {
+    val fadeLength = loopFadeLength(block)
+    return block.copyOf().also { faded ->
+        for (n in 0 until fadeLength) faded[n] *= hannRise(n, fadeLength)
+    }
+}
+
+/** The start of a looping [block] fading out to silence: played after the loop's last pass. */
+fun loopFadeOut(block: FloatArray): FloatArray {
+    val fadeLength = loopFadeLength(block)
+    return FloatArray(fadeLength) { n -> block[n] * (1 - hannRise(n, fadeLength)) }
+}
+
+private fun loopFadeLength(block: FloatArray) = sampleCountFor(LOOP_FADE_SECONDS).coerceAtMost(block.size)
 
 /**
  * A chirp's twin: the same chirp a quarter cycle ahead (cos instead of sin), with the same fade.
@@ -86,8 +105,11 @@ internal fun fadeEdges(samples: FloatArray, fadeSamples: Int) {
     if (fadeLength == 0) return
     val last = samples.lastIndex
     for (n in 0 until fadeLength) {
-        val volume = (0.5 - 0.5 * cos(PI * n / fadeLength)).toFloat()
+        val volume = hannRise(n, fadeLength)
         samples[n] *= volume
         samples[last - n] *= volume
     }
 }
+
+/** The rising half of the Hann curve: 0 at [n] = 0, climbing smoothly towards 1 at [n] = [length]. */
+private fun hannRise(n: Int, length: Int): Float = (0.5 - 0.5 * cos(PI * n / length)).toFloat()

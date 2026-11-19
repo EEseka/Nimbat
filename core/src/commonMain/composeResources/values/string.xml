@@ -2,4 +2,8 @@
 <resources>
     <string name="cancel">Cancel</string>
     <string name="flash_dismiss">Dismiss</string>
+
+    <string name="audio_error_microphone_unavailable">Nimbat couldn't use the microphone. Check that it's allowed and not busy in another app.</string>
+    <string name="audio_error_speaker_unavailable">Nimbat couldn't play sound through the speaker.</string>
+    <string name="audio_error_sample_rate_unsupported">This device's audio doesn't run at 48,000 samples a second, which Nimbat needs.</string>
 </resources>

@@ -94,6 +94,28 @@ class SignalsTest {
         assertThat(outline(1_200)).isCloseTo(1f, 0.001f)
     }
 
+    @Test
+    fun `a loop fades in from silence and then plays at full volume`() {
+        val block = dopplerTone()
+        val faded = loopFadeIn(block)
+        val fadeEnd = sampleCountFor(LOOP_FADE_SECONDS)
+
+        assertThat(faded.size).isEqualTo(block.size)
+        assertThat(faded[1]).isCloseTo(0f, 0.001f)
+        (fadeEnd until block.size).forEach { assertThat(faded[it]).isEqualTo(block[it]) }
+    }
+
+    @Test
+    fun `a loop fade out carries on from the block's start and ends silent`() {
+        // A loop always ends where its block begins, so the fade out picks up seamlessly after the last pass
+        val block = dopplerTone()
+        val tail = loopFadeOut(block)
+
+        assertThat(tail.size).isEqualTo(sampleCountFor(LOOP_FADE_SECONDS))
+        assertThat(tail[1]).isCloseTo(block[1], 0.001f)
+        assertThat(tail.last()).isCloseTo(0f, 0.001f)
+    }
+
     /** Counts how often the wave crosses from one side of 0 to the other: twice per cycle. */
     private fun zeroCrossings(samples: FloatArray, range: IntRange): Int =
         range.drop(1).count { (samples[it - 1] < 0f) != (samples[it] < 0f) }

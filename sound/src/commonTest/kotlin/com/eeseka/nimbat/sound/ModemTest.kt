@@ -1,6 +1,7 @@
 package com.eeseka.nimbat.sound
 
 import assertk.assertThat
+import assertk.assertions.isCloseTo
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotNull
@@ -22,6 +23,18 @@ class ModemTest {
     fun `a 4 byte message takes 14 symbols after the chirp and gap`() {
         // length + 4 bytes + 2 check bytes = 7 bytes = 14 symbols
         assertThat(transmit(joinCode).size).isEqualTo(2_400 + SYMBOL_SIZE + 14 * SYMBOL_SIZE)
+    }
+
+    @Test
+    fun `every symbol fades to silence at its edges so tone changes don't tick`() {
+        val sound = transmit(joinCode)
+        val dataStart = 2_400 + SYMBOL_SIZE
+
+        (0..14).forEach { boundary ->
+            val at = dataStart + boundary * SYMBOL_SIZE
+            if (at < sound.size) assertThat(sound[at]).isCloseTo(0f, 0.001f)
+            assertThat(sound[at - 1]).isCloseTo(0f, 0.01f)
+        }
     }
 
     @Test
