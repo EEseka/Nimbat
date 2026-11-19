@@ -48,7 +48,11 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(libs.bundles.koin.common)
+            implementation(libs.kotlinx.coroutines.core)
+
             implementation(projects.core)
+            implementation(projects.sound)
         }
     }
 }

@@ -54,6 +54,8 @@ kotlin {
             implementation(libs.material3.adaptive)
 
             implementation(libs.adaptive.ui)
+
+            implementation(projects.sound)
         }
     }
 }
