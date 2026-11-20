@@ -1,0 +1,39 @@
+<resources>
+    <string name="next">Next</string>
+    <string name="get_started">Get started</string>
+    <string name="page_of">Page %1$d of %2$d</string>
+
+    <string name="sonar_title">Sonar for your devices</string>
+    <string name="sonar_description">Your phone, tablet and laptop sense each other and your hand, using sound too high for you to hear. No internet, no Bluetooth, no account.</string>
+
+    <string name="distance_title">Timing tells distance</string>
+    <string name="distance_description">Sound travels about 343 metres a second. Two devices trade beeps and time the trip, so they know how far apart they are, to within a few centimetres.</string>
+    <string name="distance_example">3.43 m</string>
+
+    <string name="motion_title">Echoes tell movement</string>
+    <string name="motion_description">A hand moving closer makes its echo a little higher, and moving away makes it lower. Beep patterns even carry messages between devices.</string>
+
+    <string name="microphone_title">Nimbat listens with your mic</string>
+    <string name="microphone_description">Every feature hears its sounds through the microphone. Nothing is recorded, saved or sent anywhere.</string>
+    <string name="microphone_granted_description">All set. Your mic is ready to listen.</string>
+    <string name="microphone_blocked_description">The microphone is turned off for Nimbat. Turn it on in Settings, then come back here.</string>
+    <string name="microphone_blocked_browser_description">The microphone is blocked for this site. Allow it from the site settings next to the address bar, then try again.</string>
+    <string name="allow_microphone">Allow microphone</string>
+    <string name="asking">Asking…</string>
+    <string name="open_settings">Open settings</string>
+
+    <string name="sound_check_title">Let's check your speaker</string>
+    <string name="sound_check_description">Your device will make a few sounds too high for you to hear, then listen for them.</string>
+    <string name="sound_check_listening_description">Shh… your device is listening to itself.</string>
+    <string name="sound_check_passed_description">Loud and clear! Your device is ready.</string>
+    <string name="sound_check_passed_safari_description">Your device hears itself, but this browser hides some of its sounds from the microphone, so measuring distance and sending messages won't work here. Try a different browser for everything.</string>
+    <string name="sound_check_failed_description">Your device couldn't hear itself. Try turning the volume up. You can still carry on, but some features may not work.</string>
+    <string name="start_sound_check">Start sound check</string>
+    <string name="listening">Listening…</string>
+    <string name="try_again">Try again</string>
+
+    <string name="name_title">Name this device</string>
+    <string name="name_description">Other devices see this name when you connect.</string>
+    <string name="device_name">Device name</string>
+    <string name="device_name_placeholder">My device</string>
+</resources>

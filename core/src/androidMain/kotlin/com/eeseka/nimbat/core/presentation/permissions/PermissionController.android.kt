@@ -21,6 +21,8 @@ actual class PermissionController internal constructor(private val context: Cont
     internal var launcher: ActivityResultLauncher<String>? = null
     private var pendingResult: CompletableDeferred<Boolean>? = null
 
+    actual val canOpenAppSettings = true
+
     actual suspend fun requestPermission(permission: Permission): PermissionState {
         if (getPermissionState(permission) == PermissionState.GRANTED) return PermissionState.GRANTED
         val launcher = launcher ?: return PermissionState.DENIED

@@ -1,0 +1,57 @@
+package com.eeseka.nimbat.testing.data
+
+import com.eeseka.nimbat.core.domain.audio.AudioEngine
+import com.eeseka.nimbat.core.domain.audio.AudioError
+import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.util.EmptyResult
+import com.eeseka.nimbat.core.domain.util.Result
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
+
+class FakeAudioEngine : AudioEngine {
+    private companion object {
+        const val SILENT_BLOCK_SIZE = 4_096
+        val SILENT_BLOCK_GAP = 85.milliseconds
+    }
+
+    var heard: List<FloatArray> = emptyList() // What the first recording hears before falling silent; later recordings hear only silence
+    var isSpeakerHeard = true // Whether what play() plays reaches the microphone
+    var microphoneError: AudioError? = null
+    var loopError: AudioError? = null
+    var isLooping = false
+        private set
+
+    private val speaker = MutableSharedFlow<FloatArray>(extraBufferCapacity = 16)
+
+    override fun microphone(): Flow<FloatArray> = channelFlow {
+        microphoneError?.let { throw AudioErrorException(it) }
+        val firstBlocks = heard
+        heard = emptyList()
+        firstBlocks.forEach { send(it) }
+        launch { speaker.collect { send(it) } }
+        while (true) {
+            delay(SILENT_BLOCK_GAP)
+            send(FloatArray(SILENT_BLOCK_SIZE))
+        }
+    }
+
+    override suspend fun play(samples: FloatArray): EmptyResult<AudioError> {
+        if (isSpeakerHeard) speaker.emit(samples)
+        return Result.Success(Unit)
+    }
+
+    override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> {
+        loopError?.let { return Result.Failure(it) }
+        isLooping = true
+        try {
+            awaitCancellation()
+        } finally {
+            isLooping = false
+        }
+    }
+}

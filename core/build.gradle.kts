@@ -55,6 +55,8 @@ kotlin {
 
             implementation(libs.adaptive.ui)
 
+            implementation(libs.datastore.preferences.core)
+
             implementation(projects.sound)
         }
     }

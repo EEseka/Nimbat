@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -49,10 +50,16 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
             implementation(libs.bundles.koin.common)
-            implementation(libs.kotlinx.coroutines.core)
+
+            implementation(libs.jetbrains.compose.navigation)
 
             implementation(projects.core)
             implementation(projects.sound)
+            implementation(projects.feature.onboarding)
+        }
+
+        commonTest.dependencies {
+            implementation(projects.testing)
         }
     }
 }

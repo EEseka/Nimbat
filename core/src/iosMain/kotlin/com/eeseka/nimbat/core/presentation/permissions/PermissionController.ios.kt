@@ -13,6 +13,8 @@ import kotlin.coroutines.resume
 
 actual class PermissionController {
 
+    actual val canOpenAppSettings = true
+
     actual suspend fun requestPermission(permission: Permission): PermissionState {
         val current = getPermissionState(permission)
         if (current != PermissionState.NOT_DETERMINED) return current

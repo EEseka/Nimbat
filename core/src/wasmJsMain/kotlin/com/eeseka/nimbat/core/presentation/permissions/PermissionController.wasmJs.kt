@@ -10,6 +10,9 @@ import kotlin.js.Promise
 
 actual class PermissionController {
 
+    /** Web pages can't open the browser's settings; the person changes it from the address bar's site menu. */
+    actual val canOpenAppSettings = false
+
     actual suspend fun requestPermission(permission: Permission): PermissionState {
         if (getPermissionState(permission) == PermissionState.GRANTED) return PermissionState.GRANTED
         return try {
@@ -33,7 +36,6 @@ actual class PermissionController {
             PermissionState.NOT_DETERMINED // some browsers can't be asked about the microphone without prompting
         }
 
-    /** Web pages can't open the browser's settings; the person changes it from the address bar's site menu. */
     actual fun openAppSettings() = Unit
 }
 
