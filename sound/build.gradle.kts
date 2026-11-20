@@ -26,7 +26,8 @@ kotlin {
 
     sourceSets {
         commonTest.dependencies {
-            implementation(projects.testing)
+            implementation(libs.kotlin.test)
+            implementation(libs.assertk)
         }
     }
 }
