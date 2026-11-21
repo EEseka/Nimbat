@@ -11,7 +11,7 @@ import com.eeseka.nimbat.core.design_system.components.util.LocalHapticsEnabled
 import com.eeseka.nimbat.core.design_system.theme.ApplyNativeTheme
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
 import com.eeseka.nimbat.core.domain.settings.AppTheme
-import com.eeseka.nimbat.navigation.MainShellGraphRoutes
+import com.eeseka.nimbat.main_shell.presentation.navigation.MainShellGraphRoutes
 import com.eeseka.nimbat.navigation.NavigationRoot
 import com.eeseka.nimbat.onboarding.presentation.navigation.OnboardingGraphRoutes
 import org.koin.compose.viewmodel.koinViewModel

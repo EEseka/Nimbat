@@ -1,4 +1,4 @@
-package com.eeseka.nimbat.navigation
+package com.eeseka.nimbat.main_shell.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -7,5 +7,5 @@ sealed interface MainShellGraphRoutes {
     data object Graph : MainShellGraphRoutes
 
     @Serializable
-    data object SoundCheck : MainShellGraphRoutes
+    data object MainShell : MainShellGraphRoutes
 }
