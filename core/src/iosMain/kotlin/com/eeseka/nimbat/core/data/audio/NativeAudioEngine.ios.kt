@@ -22,6 +22,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flowOn
@@ -44,11 +45,13 @@ import platform.AVFAudio.AVAudioSessionInterruptionNotification
 import platform.AVFAudio.AVAudioSessionInterruptionTypeEnded
 import platform.AVFAudio.AVAudioSessionInterruptionTypeKey
 import platform.AVFAudio.AVAudioSessionModeMeasurement
+import platform.AVFAudio.AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
 import platform.AVFAudio.setActive
 import platform.AVFAudio.setPreferredSampleRate
 import platform.Foundation.NSError
 import platform.Foundation.NSNotificationCenter
 import platform.Foundation.NSNumber
+import platform.UIKit.UIApplicationDidBecomeActiveNotification
 import kotlin.coroutines.resume
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -57,6 +60,7 @@ import kotlin.time.Duration.Companion.seconds
 actual class NativeAudioEngine : AudioEngine {
     private companion object {
         const val BLOCK_SIZE = 4_096 // ≈ 85 ms
+        val IDLE_STOP_DELAY = 2.seconds
     }
 
     // All engine work runs here, one task at a time: activating the session can stall the main thread
@@ -68,23 +72,30 @@ actual class NativeAudioEngine : AudioEngine {
     private val loopPlayer = AVAudioPlayerNode() // separate, so a one-off sound can play over a loop
     private val monoFormat = AVAudioFormat(standardFormatWithSampleRate = SAMPLE_RATE.toDouble(), channels = 1u)
     private var isSessionReady = false
+    private var activeUses = 0 // mic recordings, sounds and loops running right now
     private var looping: Pair<AVAudioPCMBuffer, AVAudioPCMBuffer>? = null // fade in, then loop
 
     actual override fun microphone(): Flow<FloatArray> = callbackFlow {
-        if (!start()) throw AudioErrorException(AudioError.MICROPHONE_UNAVAILABLE)
+        if (!acquire()) throw AudioErrorException(AudioError.MICROPHONE_UNAVAILABLE)
         val input = engine.inputNode
         val format = input.outputFormatForBus(0u)
-        if (format.sampleRate != SAMPLE_RATE.toDouble()) throw AudioErrorException(AudioError.SAMPLE_RATE_UNSUPPORTED)
+        if (format.sampleRate != SAMPLE_RATE.toDouble()) {
+            release()
+            throw AudioErrorException(AudioError.SAMPLE_RATE_UNSUPPORTED)
+        }
 
         input.installTapOnBus(0u, bufferSize = BLOCK_SIZE.toUInt(), format = format) { buffer, _ ->
             buffer?.let { trySend(it.toSamples()) }
         }
-        awaitClose { input.removeTapOnBus(0u) }
+        awaitClose {
+            input.removeTapOnBus(0u)
+            release()
+        }
     }.flowOn(audioThread)
 
     actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
-        if (!start()) return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val buffer = samples.toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
+        if (!acquire()) return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         try {
             // An interruption can stop the "finished" callback from coming
             val longestWait = (samples.size * 1_000L / SAMPLE_RATE + 1_000).milliseconds
@@ -100,15 +111,16 @@ actual class NativeAudioEngine : AudioEngine {
             }
         } finally {
             player.stop()
+            release()
         }
         Result.Success(Unit)
     }
 
     actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
-        if (!start()) return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val fadeIn = loopFadeIn(samples).toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val loop = samples.toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val fadeOut = loopFadeOut(samples).toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
+        if (!acquire()) return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         try {
             looping = fadeIn to loop
             playLooping(fadeIn, loop)
@@ -129,10 +141,36 @@ actual class NativeAudioEngine : AudioEngine {
                 }
             }
             loopPlayer.stop()
+            release()
         }
     }
 
-    /** No Bluetooth on purpose: headset mics record at 16 kHz and can't hear the high tones. */
+    private fun acquire(): Boolean {
+        if (!start()) return false
+        activeUses++
+        return true
+    }
+
+    private fun release() {
+        activeUses--
+        if (activeUses > 0) return
+        scope.launch {
+            delay(IDLE_STOP_DELAY)
+            if (activeUses == 0) stop()
+        }
+    }
+
+    private fun stop() {
+        engine.stop()
+        attempt { error ->
+            AVAudioSession.sharedInstance().setActive(
+                false,
+                withOptions = AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation,
+                error = error
+            )
+        }
+    }
+
     private fun start(): Boolean {
         if (!isSessionReady) {
             val session = AVAudioSession.sharedInstance()
@@ -176,13 +214,16 @@ actual class NativeAudioEngine : AudioEngine {
             val type = (notification?.userInfo?.get(AVAudioSessionInterruptionTypeKey) as? NSNumber)?.unsignedLongValue
             if (type == AVAudioSessionInterruptionTypeEnded) scope.launch { resumeAfterStop() }
         }
+        center.addObserverForName(UIApplicationDidBecomeActiveNotification, `object` = null, queue = null) { _ ->
+            scope.launch { resumeAfterStop() }
+        }
         center.addObserverForName(AVAudioEngineConfigurationChangeNotification, `object` = engine, queue = null) { _ ->
             scope.launch { resumeAfterStop() }
         }
     }
 
     private fun resumeAfterStop() {
-        if (!start()) return
+        if (activeUses == 0 || engine.running || !start()) return
         looping?.let { (fadeIn, loop) ->
             loopPlayer.stop()
             playLooping(fadeIn, loop)

@@ -14,6 +14,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.eeseka.nimbat"
             packageVersion = libs.versions.app.versionName.get()
+
+            macOS {
+                infoPlist {
+                    extraKeysRawXml = """
+                        <key>NSMicrophoneUsageDescription</key>
+                        <string>Nimbat listens for sound too high to hear, so your devices can sense each other and your hand.</string>
+                    """.trimIndent()
+                }
+            }
         }
     }
 }

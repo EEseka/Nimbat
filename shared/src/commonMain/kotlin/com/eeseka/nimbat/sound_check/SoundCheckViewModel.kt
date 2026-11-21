@@ -3,10 +3,11 @@ package com.eeseka.nimbat.sound_check
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
-import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.audio.util.inBlocksOf
+import com.eeseka.nimbat.core.domain.audio.util.recordWhileLooping
+import com.eeseka.nimbat.core.domain.audio.util.recordWhilePlaying
 import com.eeseka.nimbat.core.domain.util.Result
-import com.eeseka.nimbat.core.domain.util.onFailure
 import com.eeseka.nimbat.core.presentation.permissions.PermissionState
 import com.eeseka.nimbat.core.presentation.util.UiText
 import com.eeseka.nimbat.core.presentation.audio.mappers.toUiText
@@ -22,18 +23,12 @@ import com.eeseka.nimbat.sound.median
 import com.eeseka.nimbat.sound.motion
 import com.eeseka.nimbat.sound.receive
 import com.eeseka.nimbat.sound.transmit
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import kotlin.time.Duration.Companion.milliseconds
 
 class SoundCheckViewModel(
     private val audio: AudioEngine
@@ -42,14 +37,16 @@ class SoundCheckViewModel(
     private val _state = MutableStateFlow(SoundCheckState())
     val state = _state.asStateFlow()
 
-    private var motionJob: Job? = null
-
     fun onAction(action: SoundCheckAction) {
         when (action) {
             SoundCheckAction.OnChirpCheckClick -> askFor(SoundCheck.CHIRP)
             SoundCheckAction.OnMessageCheckClick -> askFor(SoundCheck.MESSAGE)
             SoundCheckAction.OnMotionCheckClick -> {
-                if (motionJob?.isActive == true) motionJob?.cancel() else askFor(SoundCheck.MOTION)
+                if (_state.value.runningCheck == SoundCheck.MOTION) {
+                    _state.update { it.copy(runningCheck = null) }
+                } else {
+                    askFor(SoundCheck.MOTION)
+                }
             }
             is SoundCheckAction.OnMicrophonePermissionResolved -> onPermissionResolved(action.state)
         }
@@ -88,7 +85,7 @@ class SoundCheckViewModel(
     }
 
     private suspend fun chirpCheck(): UiText {
-        val recording = when (val recorded = recordWhilePlaying(chirp(18_500.0, 20_000.0, 0.05))) {
+        val recording = when (val recorded = audio.recordWhilePlaying(chirp(18_500.0, 20_000.0, 0.05))) {
             is Result.Failure -> return recorded.error.toUiText()
             is Result.Success -> recorded.data
         }
@@ -102,7 +99,7 @@ class SoundCheckViewModel(
 
     private suspend fun messageCheck(): UiText {
         val sent = "Nimbat"
-        val recording = when (val recorded = recordWhilePlaying(transmit(sent.encodeToByteArray()))) {
+        val recording = when (val recorded = audio.recordWhilePlaying(transmit(sent.encodeToByteArray()))) {
             is Result.Failure -> return recorded.error.toUiText()
             is Result.Success -> recorded.data
         }
@@ -121,22 +118,20 @@ class SoundCheckViewModel(
                 status = UiText.DynamicString("Wave your hand toward and away from the device.")
             )
         }
-        motionJob = viewModelScope.launch {
+        viewModelScope.launch {
             val recent = ArrayDeque<Motion>()
             try {
-                coroutineScope {
-                    // loop() only returns if the speaker fails; turning that into an exception stops the microphone too
-                    launch { audio.loop(dopplerTone()).onFailure { throw AudioErrorException(it) } }
-                    audio.microphone().inBlocksOf(DOPPLER_BLOCK_SIZE).collect { block ->
+                audio.recordWhileLooping(dopplerTone())
+                    .takeWhile { _state.value.runningCheck == SoundCheck.MOTION }
+                    .inBlocksOf(DOPPLER_BLOCK_SIZE)
+                    .collect { block ->
                         recent.addLast(motion(block))
                         if (recent.size > BACKGROUND_READINGS) recent.removeFirst()
                         updateMotion(recent)
                     }
-                }
             } catch (e: AudioErrorException) {
                 _state.update { it.copy(status = e.error.toUiText()) }
             } finally {
-                motionJob = null
                 _state.update { it.copy(runningCheck = null, motionWord = null, motionReadout = null) }
             }
         }
@@ -166,43 +161,6 @@ class SoundCheckViewModel(
                 motionReadout = "Toward ${towardPeak.wholeDb()} dB (still ${towardBackground.wholeDb()}) · " +
                     "Away ${awayPeak.wholeDb()} dB (still ${awayBackground.wholeDb()})"
             )
-        }
-    }
-
-    /**
-     * Records from half a second before [sound] plays until 0.3 s after, and returns the whole recording.
-     * A microphone failure ends the recording with an [AudioErrorException].
-     */
-    private suspend fun recordWhilePlaying(sound: FloatArray): Result<FloatArray, AudioError> = coroutineScope {
-        val blocks = mutableListOf<FloatArray>()
-        val recording = launch { audio.microphone().collect { blocks += it } }
-        delay(500.milliseconds) // give the microphone time to start
-        val played = audio.play(sound)
-        delay(300.milliseconds) // keep listening for the echoes
-        recording.cancelAndJoin()
-        if (played is Result.Failure) return@coroutineScope played
-
-        val samples = FloatArray(blocks.sumOf { it.size })
-        var at = 0
-        blocks.forEach { block ->
-            block.copyInto(samples, destinationOffset = at)
-            at += block.size
-        }
-        Result.Success(samples)
-    }
-}
-
-/** Regroups blocks of any size into blocks of exactly [size] samples. */
-private fun Flow<FloatArray>.inBlocksOf(size: Int): Flow<FloatArray> = flow {
-    val pending = FloatArray(size)
-    var filled = 0
-    collect { samples ->
-        for (sample in samples) {
-            pending[filled++] = sample
-            if (filled == size) {
-                emit(pending.copyOf())
-                filled = 0
-            }
         }
     }
 }

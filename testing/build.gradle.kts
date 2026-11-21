@@ -26,7 +26,13 @@ kotlin {
         commonMain.dependencies {
             // api, not implementation: every test file imports these, so they reach each module that uses :testing
             api(libs.kotlin.test)
+            api(libs.turbine)
             api(libs.assertk)
+            api(libs.kotlinx.coroutines.test)
+
+            implementation(libs.compose.foundation)
+
+            implementation(projects.core)
         }
 
         androidMain.dependencies {

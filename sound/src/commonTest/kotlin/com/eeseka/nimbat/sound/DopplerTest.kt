@@ -7,6 +7,7 @@ import assertk.assertions.isGreaterThan
 import assertk.assertions.isLessThan
 import kotlin.math.PI
 import kotlin.math.sin
+import kotlin.random.Random
 import kotlin.test.Test
 
 class DopplerTest {
@@ -66,6 +67,33 @@ class DopplerTest {
         val heard = motion(block(echoShiftHz = dopplerShiftHz(0.9), echoLoudness = 0.01))
 
         assertThat(heard.speedMetersPerSecond).isCloseTo(0.9, 0.1)
+    }
+
+    @Test
+    fun `the tone over room hiss is heard clearly`() {
+        val tone = dopplerTone()
+        val heard = hiss(loudness = 0.01).also { hiss -> hiss.indices.forEach { hiss[it] += tone[it] } }
+
+        assertThat(toneClarityDb(heard)).isGreaterThan(30.0)
+    }
+
+    @Test
+    fun `hiss alone has no clear tone`() {
+        assertThat(toneClarityDb(hiss(loudness = 0.01))).isLessThan(10.0)
+    }
+
+    @Test
+    fun `a tone 1_000 times quieter than the hiss is not heard`() {
+        val tone = dopplerTone()
+        val heard = hiss(loudness = 0.1).also { hiss -> hiss.indices.forEach { hiss[it] += tone[it] * 0.0001f } }
+
+        assertThat(toneClarityDb(heard)).isLessThan(10.0)
+    }
+
+    /** Random noise, the same every run, between −[loudness] and [loudness]. */
+    private fun hiss(loudness: Double): FloatArray {
+        val random = Random(seed = 19)
+        return FloatArray(DOPPLER_BLOCK_SIZE) { (random.nextDouble(-loudness, loudness)).toFloat() }
     }
 
     /** What the mic hears: the tone straight from the speaker plus one echo shifted by [echoShiftHz]. */

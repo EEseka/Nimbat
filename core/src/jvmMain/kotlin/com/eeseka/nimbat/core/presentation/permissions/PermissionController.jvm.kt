@@ -5,11 +5,13 @@ import androidx.compose.runtime.remember
 
 actual class PermissionController {
 
+    /** Desktop has no per-app settings page to open; macOS keeps it under Privacy & Security, Microphone. */
+    actual val canOpenAppSettings = false
+
     actual suspend fun requestPermission(permission: Permission): PermissionState = PermissionState.GRANTED
 
     actual suspend fun getPermissionState(permission: Permission): PermissionState = PermissionState.GRANTED
 
-    /** Desktop has no per-app settings page to open; macOS keeps it under Privacy & Security, Microphone. */
     actual fun openAppSettings() = Unit
 }
 

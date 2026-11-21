@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 /** How many mic samples each Doppler reading looks at: 4,096 ≈ 85 ms, so about 12 readings a second. */
 const val DOPPLER_BLOCK_SIZE = 4_096
 
-/** The FFT tone slot the Doppler tone sits in. Each slot is 48,000 ÷ 4,096 ≈ 11.7 Hz wide. */
+/** The FFT slot the Doppler tone sits in. */
 private const val CARRIER_SLOT = 1_621
 
 /**
@@ -20,7 +20,13 @@ private const val NEAREST_SLOT = 4
 /** Farthest slot counted as motion: 30 slots ≈ 352 Hz ≈ 3.2 m/s, faster than a hand waves. */
 private const val FARTHEST_SLOT = 30
 
-/** How far apart neighbouring tone slots are, in Hz. */
+private const val CARRIER_SLOT_COUNT = 3
+
+/** Nearest slot counted as background hiss: 40 slots ≈ 470 Hz, past the fastest hand's echo. */
+private const val BACKGROUND_NEAREST_SLOT = 40
+private const val BACKGROUND_FARTHEST_SLOT = 120
+
+/** The width of one FFT slot: 48,000 ÷ 4,096 ≈ 11.7 Hz. */
 private const val SLOT_HZ = SAMPLE_RATE.toDouble() / DOPPLER_BLOCK_SIZE
 
 /**
@@ -51,31 +57,17 @@ fun speedForShift(
     temperatureC: Double = DEFAULT_TEMPERATURE_C,
 ): Double = shiftHz * speedOfSound(temperatureC) / (2 * carrierHz)
 
-/**
- * Listens to one block of mic samples while [dopplerTone] plays, and reports what moved.
- *
- * The block is faded with a Hann window (so the loud tone doesn't spill into its neighbours), unmixed with
- * the FFT, and the slots just above the tone (things coming closer) and just below it (things moving away)
- * are compared with the tone's own slots.
- */
+/** What moved while [dopplerTone] played: echoes just above the tone come closer, just below it move away. */
 fun motion(block: FloatArray, temperatureC: Double = DEFAULT_TEMPERATURE_C): Motion {
-    require(block.size == DOPPLER_BLOCK_SIZE) { "block must be $DOPPLER_BLOCK_SIZE samples, was ${block.size}" }
-
-    val windowed = block.copyOf().also { fadeEdges(samples = it, fadeSamples = it.size / 2) }
-    val re = DoubleArray(windowed.size) { windowed[it].toDouble() }
-    val im = DoubleArray(windowed.size)
-    fft(re, im)
-    fun power(slot: Int) = re[slot] * re[slot] + im[slot] * im[slot]
-
-    // The Hann window spreads a clean tone over its own slot and one each side
-    val carrierPower = (CARRIER_SLOT - 1..CARRIER_SLOT + 1).sumOf(::power)
+    val power = slotPowers(block)
+    val carrierPower = carrierPower(power)
 
     var towardPower = 0.0
     var awayPower = 0.0
     var weightedShift = 0.0
     for (offset in NEAREST_SLOT..FARTHEST_SLOT) {
-        val toward = power(CARRIER_SLOT + offset)
-        val away = power(CARRIER_SLOT - offset)
+        val toward = power[CARRIER_SLOT + offset]
+        val away = power[CARRIER_SLOT - offset]
         towardPower += toward
         awayPower += away
         weightedShift += (toward - away) * offset * SLOT_HZ
@@ -89,6 +81,30 @@ fun motion(block: FloatArray, temperatureC: Double = DEFAULT_TEMPERATURE_C): Mot
         speedMetersPerSecond = speedForShift(averageShiftHz, temperatureC = temperatureC),
     )
 }
+
+/** How far [dopplerTone] stands above the background hiss around it, in dB. */
+fun toneClarityDb(block: FloatArray): Double {
+    val power = slotPowers(block)
+    val background = (BACKGROUND_NEAREST_SLOT..BACKGROUND_FARTHEST_SLOT)
+        .sumOf { power[CARRIER_SLOT + it] + power[CARRIER_SLOT - it] } /
+        (2 * (BACKGROUND_FARTHEST_SLOT - BACKGROUND_NEAREST_SLOT + 1))
+    return relativeDb(carrierPower(power) / CARRIER_SLOT_COUNT, background)
+}
+
+/** The power in each FFT slot of a Hann-faded [block], so a loud tone doesn't spill into its neighbours. */
+private fun slotPowers(block: FloatArray): DoubleArray {
+    require(block.size == DOPPLER_BLOCK_SIZE) { "block must be $DOPPLER_BLOCK_SIZE samples, was ${block.size}" }
+
+    val windowed = block.copyOf().also { fadeEdges(samples = it, fadeSamples = it.size / 2) }
+    val re = DoubleArray(windowed.size) { windowed[it].toDouble() }
+    val im = DoubleArray(windowed.size)
+    fft(re, im)
+    return DoubleArray(windowed.size) { re[it] * re[it] + im[it] * im[it] }
+}
+
+/** The Hann window spreads a clean tone over its own slot and one each side. */
+private fun carrierPower(power: DoubleArray): Double =
+    (CARRIER_SLOT - 1..CARRIER_SLOT + 1).sumOf { power[it] }
 
 /** Compares two powers in [decibels]. Power is amplitude squared, so the amplitude ratio is its square root. */
 private fun relativeDb(power: Double, reference: Double): Double =
