@@ -35,6 +35,7 @@ plugins {
 
 include(":core")
 include(":androidApp")
+include(":feature:main_shell")
 include(":desktopApp")
 include(":sound")
 include(":testing")

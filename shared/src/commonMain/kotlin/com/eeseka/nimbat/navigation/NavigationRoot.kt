@@ -3,11 +3,10 @@ package com.eeseka.nimbat.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
+import com.eeseka.nimbat.main_shell.presentation.navigation.MainShellGraphRoutes
+import com.eeseka.nimbat.main_shell.presentation.navigation.mainShellGraph
 import com.eeseka.nimbat.onboarding.presentation.navigation.OnboardingGraphRoutes
 import com.eeseka.nimbat.onboarding.presentation.navigation.onboardingGraph
-import com.eeseka.nimbat.sound_check.SoundCheckRoot
 
 @Composable
 fun NavigationRoot(
@@ -26,12 +25,6 @@ fun NavigationRoot(
             }
         )
 
-        navigation<MainShellGraphRoutes.Graph>(
-            startDestination = MainShellGraphRoutes.SoundCheck
-        ) {
-            composable<MainShellGraphRoutes.SoundCheck> {
-                SoundCheckRoot()
-            }
-        }
+        mainShellGraph()
     }
 }

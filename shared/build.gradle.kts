@@ -54,8 +54,8 @@ kotlin {
             implementation(libs.jetbrains.compose.navigation)
 
             implementation(projects.core)
-            implementation(projects.sound)
             implementation(projects.feature.onboarding)
+            implementation(projects.feature.mainShell)
         }
 
         commonTest.dependencies {
