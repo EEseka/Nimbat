@@ -30,6 +30,8 @@ import com.eeseka.nimbat.core.design_system.components.layouts.NimbatScaffold
 import com.eeseka.nimbat.core.design_system.components.util.AppHaptic
 import com.eeseka.nimbat.core.design_system.components.util.rememberAppHaptic
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
+import com.eeseka.nimbat.core.presentation.device.components.DeviceNameField
+import com.eeseka.nimbat.core.presentation.device.mappers.getIcon
 import com.eeseka.nimbat.core.presentation.permissions.MicrophonePermissionEffect
 import com.eeseka.nimbat.core.presentation.permissions.MicrophonePermissionResumeEffect
 import com.eeseka.nimbat.core.presentation.permissions.PermissionState
@@ -38,7 +40,6 @@ import com.eeseka.nimbat.core.presentation.util.DeviceConfiguration
 import com.eeseka.nimbat.core.presentation.util.ObserveAsEvents
 import com.eeseka.nimbat.core.presentation.util.clearFocusOnTap
 import com.eeseka.nimbat.core.presentation.util.currentDeviceConfiguration
-import com.eeseka.nimbat.onboarding.presentation.components.DeviceNameField
 import com.eeseka.nimbat.onboarding.presentation.components.OnboardingControls
 import com.eeseka.nimbat.onboarding.presentation.components.OnboardingPageContent
 import com.eeseka.nimbat.onboarding.presentation.components.illustrations.DistanceIllustration
@@ -47,7 +48,6 @@ import com.eeseka.nimbat.onboarding.presentation.components.illustrations.Motion
 import com.eeseka.nimbat.onboarding.presentation.components.illustrations.NameIllustration
 import com.eeseka.nimbat.onboarding.presentation.components.illustrations.SonarIllustration
 import com.eeseka.nimbat.onboarding.presentation.components.illustrations.SoundCheckIllustration
-import com.eeseka.nimbat.onboarding.presentation.mappers.getIcon
 import com.eeseka.nimbat.onboarding.presentation.mappers.getTitle
 import com.eeseka.nimbat.onboarding.presentation.model.OnboardingPage
 import com.eeseka.nimbat.onboarding.presentation.util.getControlsUi

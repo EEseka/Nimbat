@@ -33,6 +33,7 @@ kotlin {
             implementation(libs.compose.foundation)
 
             implementation(projects.core)
+            implementation(projects.sound)
         }
 
         androidMain.dependencies {

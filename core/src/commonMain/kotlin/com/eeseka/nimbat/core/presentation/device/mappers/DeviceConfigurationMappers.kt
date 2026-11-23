@@ -1,4 +1,4 @@
-package com.eeseka.nimbat.onboarding.presentation.mappers
+package com.eeseka.nimbat.core.presentation.device.mappers
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.composables.icons.lucide.Laptop

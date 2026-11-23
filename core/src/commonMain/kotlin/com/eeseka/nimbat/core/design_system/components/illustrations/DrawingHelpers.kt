@@ -1,4 +1,4 @@
-package com.eeseka.nimbat.onboarding.presentation.components.illustrations.util
+package com.eeseka.nimbat.core.design_system.components.illustrations
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.vector.VectorPainter
 import com.eeseka.nimbat.core.presentation.util.DeviceConfiguration
 
 @Composable
-internal fun rememberLoopProgress(durationMillis: Int, label: String): State<Float> =
+fun rememberLoopProgress(durationMillis: Int, label: String): State<Float> =
     rememberInfiniteTransition(label = label).animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -31,7 +31,7 @@ internal fun rememberLoopProgress(durationMillis: Int, label: String): State<Flo
         label = label
     )
 
-internal fun DrawScope.drawPhone(center: Offset, height: Float, body: Color, screen: Color) {
+fun DrawScope.drawPhone(center: Offset, height: Float, body: Color, screen: Color) {
     val width = height * 0.52f
     val topLeft = Offset(center.x - width / 2, center.y - height / 2)
     drawRoundRect(body, topLeft, Size(width, height), CornerRadius(width * 0.24f))
@@ -44,7 +44,7 @@ internal fun DrawScope.drawPhone(center: Offset, height: Float, body: Color, scr
     )
 }
 
-internal fun DrawScope.drawLaptop(center: Offset, width: Float, body: Color, screen: Color) {
+fun DrawScope.drawLaptop(center: Offset, width: Float, body: Color, screen: Color) {
     val lidWidth = width * 0.84f
     val lidHeight = width * 0.56f
     val lidTopLeft = Offset(center.x - lidWidth / 2, center.y - lidHeight * 0.6f)
@@ -64,7 +64,7 @@ internal fun DrawScope.drawLaptop(center: Offset, width: Float, body: Color, scr
     )
 }
 
-internal fun DrawScope.drawTablet(center: Offset, height: Float, body: Color, screen: Color) {
+fun DrawScope.drawTablet(center: Offset, height: Float, body: Color, screen: Color) {
     val width = height * 0.76f
     val topLeft = Offset(center.x - width / 2, center.y - height / 2)
     drawRoundRect(body, topLeft, Size(width, height), CornerRadius(width * 0.14f))
@@ -77,7 +77,7 @@ internal fun DrawScope.drawTablet(center: Offset, height: Float, body: Color, sc
     )
 }
 
-internal fun DrawScope.drawDevice(
+fun DrawScope.drawDevice(
     configuration: DeviceConfiguration,
     center: Offset,
     height: Float,
@@ -89,7 +89,7 @@ internal fun DrawScope.drawDevice(
     DeviceConfiguration.DESKTOP -> drawLaptop(center, height * 1.2f, body, screen)
 }
 
-internal fun DrawScope.drawHand(center: Offset, height: Float, color: Color) {
+fun DrawScope.drawHand(center: Offset, height: Float, color: Color) {
     val palmWidth = height * 0.5f
     val palmHeight = height * 0.46f
     val palmTop = center.y - palmHeight * 0.1f
@@ -122,7 +122,7 @@ internal fun DrawScope.drawHand(center: Offset, height: Float, color: Color) {
     }
 }
 
-internal fun DrawScope.drawWave(
+fun DrawScope.drawWave(
     center: Offset,
     radius: Float,
     facingDegrees: Float,
@@ -141,7 +141,7 @@ internal fun DrawScope.drawWave(
     )
 }
 
-internal fun DrawScope.drawIcon(icon: VectorPainter, center: Offset, size: Float, tint: Color) {
+fun DrawScope.drawIcon(icon: VectorPainter, center: Offset, size: Float, tint: Color) {
     translate(left = center.x - size / 2, top = center.y - size / 2) {
         with(icon) { draw(Size(size, size), colorFilter = ColorFilter.tint(tint)) }
     }

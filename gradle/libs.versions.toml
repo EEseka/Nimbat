@@ -28,6 +28,7 @@ adaptive = "1.3.0"
 
 iconsLucideCmp = "2.2.1"
 calf = "0.14.0"
+buildkonfig = "0.24.0"
 
 # Testing
 assertk = "0.28.1"
@@ -91,6 +92,7 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 androidMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 [bundles]
 koin-common = [

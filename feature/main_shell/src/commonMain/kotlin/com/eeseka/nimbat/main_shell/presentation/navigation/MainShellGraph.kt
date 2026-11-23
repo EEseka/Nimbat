@@ -5,12 +5,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.eeseka.nimbat.main_shell.presentation.MainShellScreen
 
-fun NavGraphBuilder.mainShellGraph() {
+fun NavGraphBuilder.mainShellGraph(
+    onNavigateToOnboarding: () -> Unit
+) {
     navigation<MainShellGraphRoutes.Graph>(
         startDestination = MainShellGraphRoutes.MainShell
     ) {
         composable<MainShellGraphRoutes.MainShell> {
-            MainShellScreen()
+            MainShellScreen(navigateToOnboarding = onNavigateToOnboarding)
         }
     }
 }

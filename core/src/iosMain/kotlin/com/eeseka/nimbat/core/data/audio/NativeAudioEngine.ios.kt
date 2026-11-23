@@ -3,9 +3,11 @@ package com.eeseka.nimbat.core.data.audio
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.settings.AppPreferences
 import com.eeseka.nimbat.core.domain.util.EmptyResult
 import com.eeseka.nimbat.core.domain.util.Result
 import com.eeseka.nimbat.sound.SAMPLE_RATE
+import com.eeseka.nimbat.sound.atVolume
 import com.eeseka.nimbat.sound.loopFadeIn
 import com.eeseka.nimbat.sound.loopFadeOut
 import kotlinx.cinterop.CPointer
@@ -25,6 +27,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -57,7 +60,9 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalForeignApi::class)
-actual class NativeAudioEngine : AudioEngine {
+actual class NativeAudioEngine(
+    private val appPreferences: AppPreferences
+) : AudioEngine {
     private companion object {
         const val BLOCK_SIZE = 4_096 // ≈ 85 ms
         val IDLE_STOP_DELAY = 2.seconds
@@ -93,7 +98,13 @@ actual class NativeAudioEngine : AudioEngine {
         }
     }.flowOn(audioThread)
 
-    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
+    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> =
+        playSamples(atVolume(samples, appPreferences.volume.first()))
+
+    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> =
+        loopSamples(atVolume(samples, appPreferences.volume.first()))
+
+    private suspend fun playSamples(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
         val buffer = samples.toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         if (!acquire()) return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         try {
@@ -116,7 +127,7 @@ actual class NativeAudioEngine : AudioEngine {
         Result.Success(Unit)
     }
 
-    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
+    private suspend fun loopSamples(samples: FloatArray): EmptyResult<AudioError> = withContext(audioThread) {
         val fadeIn = loopFadeIn(samples).toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val loop = samples.toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
         val fadeOut = loopFadeOut(samples).toBuffer() ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)

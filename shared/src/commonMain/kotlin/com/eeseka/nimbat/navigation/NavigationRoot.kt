@@ -25,6 +25,12 @@ fun NavigationRoot(
             }
         )
 
-        mainShellGraph()
+        mainShellGraph(
+            onNavigateToOnboarding = {
+                navController.navigate(OnboardingGraphRoutes.Graph) {
+                    popUpTo(MainShellGraphRoutes.Graph) { inclusive = true }
+                }
+            }
+        )
     }
 }

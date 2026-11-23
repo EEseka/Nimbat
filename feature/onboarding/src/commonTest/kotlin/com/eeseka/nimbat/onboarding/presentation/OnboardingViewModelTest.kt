@@ -7,6 +7,7 @@ import assertk.assertions.isFalse
 import assertk.assertions.isNotNull
 import assertk.assertions.isNull
 import assertk.assertions.isTrue
+import com.eeseka.nimbat.core.data.audio.AudioSoundChecker
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.device.DeviceConstants
 import com.eeseka.nimbat.core.presentation.permissions.PermissionState
@@ -117,6 +118,7 @@ class OnboardingViewModelTest {
             assertThat(awaitItem()).isEqualTo(OnboardingEvent.SoundCheckFinished(isHeard = true))
             assertThat(viewModel.state.value.soundCheckStatus).isEqualTo(SoundCheckStatus.PASSED)
             assertThat(audioEngine.isLooping).isFalse()
+            assertThat(appPreferences.isSoundCheckPassed.first()).isEqualTo(true)
         }
     }
 
@@ -131,6 +133,7 @@ class OnboardingViewModelTest {
 
         assertThat(viewModel.state.value.soundCheckStatus).isEqualTo(SoundCheckStatus.FAILED)
         assertThat(viewModel.state.value.soundCheckError).isNull()
+        assertThat(appPreferences.isSoundCheckPassed.first()).isEqualTo(false)
     }
 
     @Test
@@ -171,6 +174,7 @@ class OnboardingViewModelTest {
         }
         assertThat(appPreferences.deviceName.first()).isEqualTo("Living room laptop")
         assertThat(onboardingStorage.hasSeenOnboarding.first()).isTrue()
+        assertThat(viewModel.state.value.isSaving).isFalse()
     }
 
     @Test
@@ -218,11 +222,10 @@ class OnboardingViewModelTest {
 
     private fun TestScope.createViewModel(): OnboardingViewModel {
         val viewModel = OnboardingViewModel(
-            audioEngine = audioEngine,
+            soundChecker = AudioSoundChecker(audioEngine = audioEngine, soundDispatcher = testDispatcher),
             onboardingStorage = onboardingStorage,
             appPreferences = appPreferences,
-            deviceNameProvider = deviceNameProvider,
-            soundDispatcher = testDispatcher
+            deviceNameProvider = deviceNameProvider
         )
         collectInBackground(viewModel.state)
         return viewModel

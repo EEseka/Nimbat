@@ -1,4 +1,4 @@
-package com.eeseka.nimbat.onboarding.presentation.components
+package com.eeseka.nimbat.core.presentation.device.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,9 +15,9 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Smartphone
 import com.eeseka.nimbat.core.design_system.components.textfields.NimbatTextField
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-import nimbat.feature.onboarding.generated.resources.Res
-import nimbat.feature.onboarding.generated.resources.device_name
-import nimbat.feature.onboarding.generated.resources.device_name_placeholder
+import nimbat.core.generated.resources.Res
+import nimbat.core.generated.resources.device_name
+import nimbat.core.generated.resources.device_name_placeholder
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

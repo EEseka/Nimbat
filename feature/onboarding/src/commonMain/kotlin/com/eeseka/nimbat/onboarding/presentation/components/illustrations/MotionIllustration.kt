@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawHand
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawPhone
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawWave
+import com.eeseka.nimbat.core.design_system.components.illustrations.rememberLoopProgress
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawHand
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawPhone
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawWave
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.rememberLoopProgress
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
