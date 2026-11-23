@@ -11,4 +11,8 @@ class FakeOnboardingStorage : OnboardingStorage {
     override suspend fun setOnboardingCompleted() {
         hasSeenOnboardingFlow.value = true
     }
+
+    override suspend fun clear() {
+        hasSeenOnboardingFlow.value = false
+    }
 }

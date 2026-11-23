@@ -8,7 +8,4 @@ sealed interface PlaceholderRoutes {
 
     @Serializable
     data object Lab : PlaceholderRoutes
-
-    @Serializable
-    data object Settings : PlaceholderRoutes
 }

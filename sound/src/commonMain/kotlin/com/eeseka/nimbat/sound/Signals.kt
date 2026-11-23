@@ -61,6 +61,9 @@ fun loopFadeOut(block: FloatArray): FloatArray {
     return FloatArray(fadeLength) { n -> block[n] * (1 - hannRise(n, fadeLength)) }
 }
 
+/** A copy of [samples] at [volume] (0 to 1): every sample scaled, so the sound is quieter but its pitch and timing don't change. */
+fun atVolume(samples: FloatArray, volume: Float): FloatArray = FloatArray(samples.size) { samples[it] * volume }
+
 private fun loopFadeLength(block: FloatArray) = sampleCountFor(LOOP_FADE_SECONDS).coerceAtMost(block.size)
 
 /**

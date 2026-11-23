@@ -45,6 +45,7 @@ kotlin {
             implementation(libs.adaptive.ui)
 
             implementation(projects.core)
+            implementation(projects.feature.settings)
         }
     }
 }

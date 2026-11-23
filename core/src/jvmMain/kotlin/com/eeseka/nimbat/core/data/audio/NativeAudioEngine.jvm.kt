@@ -3,9 +3,11 @@ package com.eeseka.nimbat.core.data.audio
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.settings.AppPreferences
 import com.eeseka.nimbat.core.domain.util.EmptyResult
 import com.eeseka.nimbat.core.domain.util.Result
 import com.eeseka.nimbat.sound.SAMPLE_RATE
+import com.eeseka.nimbat.sound.atVolume
 import com.eeseka.nimbat.sound.loopFadeIn
 import com.eeseka.nimbat.sound.loopFadeOut
 import kotlinx.coroutines.Dispatchers
@@ -13,6 +15,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
@@ -26,7 +29,9 @@ import javax.sound.sampled.SourceDataLine
 import javax.sound.sampled.TargetDataLine
 import kotlin.time.Duration.Companion.milliseconds
 
-actual class NativeAudioEngine : AudioEngine {
+actual class NativeAudioEngine(
+    private val appPreferences: AppPreferences
+) : AudioEngine {
     private companion object {
         const val BYTES_PER_SAMPLE = 2
         const val BLOCK_SIZE = 4_096 // ≈ 85 ms
@@ -59,7 +64,13 @@ actual class NativeAudioEngine : AudioEngine {
         }
     }.flowOn(Dispatchers.IO)
 
-    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> = withContext(Dispatchers.IO) {
+    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> =
+        playSamples(atVolume(samples, appPreferences.volume.first()))
+
+    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> =
+        loopSamples(atVolume(samples, appPreferences.volume.first()))
+
+    private suspend fun playSamples(samples: FloatArray): EmptyResult<AudioError> = withContext(Dispatchers.IO) {
         val line = when (val opened = openLine<SourceDataLine>(AudioError.SPEAKER_UNAVAILABLE)) {
             is Result.Failure -> return@withContext opened
             is Result.Success -> opened.data
@@ -81,7 +92,7 @@ actual class NativeAudioEngine : AudioEngine {
         }
     }
 
-    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> = withContext(Dispatchers.IO) {
+    private suspend fun loopSamples(samples: FloatArray): EmptyResult<AudioError> = withContext(Dispatchers.IO) {
         val line = when (val opened = openLine<SourceDataLine>(AudioError.SPEAKER_UNAVAILABLE)) {
             is Result.Failure -> return@withContext opened
             is Result.Success -> opened.data

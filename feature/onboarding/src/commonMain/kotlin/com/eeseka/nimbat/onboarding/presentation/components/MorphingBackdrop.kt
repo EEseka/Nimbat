@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.lerp
 import androidx.graphics.shapes.Morph
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.rememberLoopProgress
+import com.eeseka.nimbat.core.design_system.components.illustrations.rememberLoopProgress
 import kotlin.math.abs
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

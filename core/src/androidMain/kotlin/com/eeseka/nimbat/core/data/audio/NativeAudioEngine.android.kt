@@ -13,9 +13,11 @@ import androidx.core.content.getSystemService
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.settings.AppPreferences
 import com.eeseka.nimbat.core.domain.util.EmptyResult
 import com.eeseka.nimbat.core.domain.util.Result
 import com.eeseka.nimbat.sound.SAMPLE_RATE
+import com.eeseka.nimbat.sound.atVolume
 import com.eeseka.nimbat.sound.loopFadeIn
 import com.eeseka.nimbat.sound.loopFadeOut
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
@@ -30,7 +33,10 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.time.Duration.Companion.milliseconds
 
-actual class NativeAudioEngine(context: Context) : AudioEngine {
+actual class NativeAudioEngine(
+    context: Context,
+    private val appPreferences: AppPreferences
+) : AudioEngine {
     private companion object {
         const val ENCODING = AudioFormat.ENCODING_PCM_FLOAT
         const val BLOCK_SIZE = 4_096 // ≈ 85 ms
@@ -74,11 +80,15 @@ actual class NativeAudioEngine(context: Context) : AudioEngine {
     }.flowOn(Dispatchers.IO)
 
     actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> =
+        playSamples(atVolume(samples, appPreferences.volume.first()))
+
+    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> =
+        loopSamples(atVolume(samples, appPreferences.volume.first()))
+
+    private suspend fun playSamples(samples: FloatArray): EmptyResult<AudioError> =
         withContext(Dispatchers.IO) {
-            val track = buildTrack(
-                mode = AudioTrack.MODE_STREAM,
-                bufferBytes = maxOf(minPlaybackBytes(), BLOCK_SIZE * Float.SIZE_BYTES)
-            ) ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
+            val track = buildTrack(bufferBytes = maxOf(minPlaybackBytes(), BLOCK_SIZE * Float.SIZE_BYTES))
+                ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
 
             try {
                 track.play()
@@ -100,12 +110,10 @@ actual class NativeAudioEngine(context: Context) : AudioEngine {
             }
         }
 
-    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> =
+    private suspend fun loopSamples(samples: FloatArray): EmptyResult<AudioError> =
         withContext(Dispatchers.IO) {
-            val track = buildTrack(
-                mode = AudioTrack.MODE_STREAM,
-                bufferBytes = maxOf(minPlaybackBytes(), samples.size * Float.SIZE_BYTES)
-            ) ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
+            val track = buildTrack(bufferBytes = maxOf(minPlaybackBytes(), samples.size * Float.SIZE_BYTES))
+                ?: return@withContext Result.Failure(AudioError.SPEAKER_UNAVAILABLE)
 
             var framesWritten = 0L
             try {
@@ -148,7 +156,7 @@ actual class NativeAudioEngine(context: Context) : AudioEngine {
         else MediaRecorder.AudioSource.VOICE_RECOGNITION
     }
 
-    private fun buildTrack(mode: Int, bufferBytes: Int): AudioTrack? = try {
+    private fun buildTrack(bufferBytes: Int): AudioTrack? = try {
         AudioTrack.Builder()
             .setAudioAttributes(
                 AudioAttributes.Builder()
@@ -163,7 +171,7 @@ actual class NativeAudioEngine(context: Context) : AudioEngine {
                     .setChannelMask(AudioFormat.CHANNEL_OUT_MONO)
                     .build()
             )
-            .setTransferMode(mode)
+            .setTransferMode(AudioTrack.MODE_STREAM)
             .setBufferSizeInBytes(bufferBytes)
             .build()
     } catch (_: UnsupportedOperationException) {

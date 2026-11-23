@@ -5,15 +5,18 @@ package com.eeseka.nimbat.core.data.audio
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
+import com.eeseka.nimbat.core.domain.settings.AppPreferences
 import com.eeseka.nimbat.core.domain.util.EmptyResult
 import com.eeseka.nimbat.core.domain.util.Result
 import com.eeseka.nimbat.sound.LOOP_FADE_SECONDS
 import com.eeseka.nimbat.sound.SAMPLE_RATE
+import com.eeseka.nimbat.sound.atVolume
 import kotlinx.coroutines.await
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.coroutines.resume
@@ -21,7 +24,9 @@ import kotlin.js.JsException
 import kotlin.js.Promise
 import kotlin.time.Duration.Companion.milliseconds
 
-actual class NativeAudioEngine : AudioEngine {
+actual class NativeAudioEngine(
+    private val appPreferences: AppPreferences
+) : AudioEngine {
     private companion object {
         const val BLOCK_SIZE = 4_096 // ≈ 85 ms
     }
@@ -64,7 +69,13 @@ actual class NativeAudioEngine : AudioEngine {
         awaitClose { stopCapture(capture) }
     }
 
-    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> {
+    actual override suspend fun play(samples: FloatArray): EmptyResult<AudioError> =
+        playSamples(atVolume(samples, appPreferences.volume.first()))
+
+    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> =
+        loopSamples(atVolume(samples, appPreferences.volume.first()))
+
+    private suspend fun playSamples(samples: FloatArray): EmptyResult<AudioError> {
         val audioContext = when (val started = startContext()) {
             is Result.Failure -> return started
             is Result.Success -> started.data
@@ -84,7 +95,7 @@ actual class NativeAudioEngine : AudioEngine {
         return Result.Success(Unit)
     }
 
-    actual override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> {
+    private suspend fun loopSamples(samples: FloatArray): EmptyResult<AudioError> {
         val audioContext = when (val started = startContext()) {
             is Result.Failure -> return started
             is Result.Success -> started.data

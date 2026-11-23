@@ -24,7 +24,17 @@ data class ExtendedColors(
     val success: Color,
     val onSuccess: Color,
     val warningContainer: Color,
-    val onWarningContainer: Color
+    val onWarningContainer: Color,
+    val skyContainer: Color,
+    val onSkyContainer: Color,
+    val amberContainer: Color,
+    val onAmberContainer: Color,
+    val mintContainer: Color,
+    val onMintContainer: Color,
+    val coralContainer: Color,
+    val onCoralContainer: Color,
+    val lemonContainer: Color,
+    val onLemonContainer: Color
 )
 
 val LightExtendedColors = ExtendedColors(
@@ -34,7 +44,17 @@ val LightExtendedColors = ExtendedColors(
     success = successLight,
     onSuccess = onSuccessLight,
     warningContainer = warningContainerLight,
-    onWarningContainer = onWarningContainerLight
+    onWarningContainer = onWarningContainerLight,
+    skyContainer = skyContainerLight,
+    onSkyContainer = onSkyContainerLight,
+    amberContainer = amberContainerLight,
+    onAmberContainer = onAmberContainerLight,
+    mintContainer = mintContainerLight,
+    onMintContainer = onMintContainerLight,
+    coralContainer = coralContainerLight,
+    onCoralContainer = onCoralContainerLight,
+    lemonContainer = lemonContainerLight,
+    onLemonContainer = onLemonContainerLight
 )
 
 val DarkExtendedColors = ExtendedColors(
@@ -44,7 +64,17 @@ val DarkExtendedColors = ExtendedColors(
     success = successDark,
     onSuccess = onSuccessDark,
     warningContainer = warningContainerDark,
-    onWarningContainer = onWarningContainerDark
+    onWarningContainer = onWarningContainerDark,
+    skyContainer = skyContainerDark,
+    onSkyContainer = onSkyContainerDark,
+    amberContainer = amberContainerDark,
+    onAmberContainer = onAmberContainerDark,
+    mintContainer = mintContainerDark,
+    onMintContainer = onMintContainerDark,
+    coralContainer = coralContainerDark,
+    onCoralContainer = onCoralContainerDark,
+    lemonContainer = lemonContainerDark,
+    onLemonContainer = onLemonContainerDark
 )
 
 val LightScheme = lightColorScheme(

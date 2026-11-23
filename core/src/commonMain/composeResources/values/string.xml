@@ -7,6 +7,9 @@
     <string name="audio_error_speaker_unavailable">Nimbat couldn't play sound through the speaker.</string>
     <string name="audio_error_sample_rate_unsupported">This device's audio doesn't run at 48,000 samples a second, which Nimbat needs.</string>
 
+    <string name="device_name">Device name</string>
+    <string name="device_name_placeholder">My device</string>
     <string name="error_device_name_blank">Device name cannot be empty.</string>
     <string name="error_device_name_too_long">Device name cannot exceed 30 characters.</string>
+    <string name="nimbat_logo">Nimbat logo</string>
 </resources>

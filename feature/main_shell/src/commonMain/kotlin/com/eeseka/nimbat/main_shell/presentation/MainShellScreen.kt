@@ -33,9 +33,12 @@ import com.eeseka.nimbat.main_shell.presentation.components.NimbatNavigationRail
 import com.eeseka.nimbat.main_shell.presentation.components.PlaceholderDestination
 import com.eeseka.nimbat.main_shell.presentation.model.NimbatNavigationItem
 import com.eeseka.nimbat.main_shell.presentation.navigation.PlaceholderRoutes
+import com.eeseka.nimbat.settings.presentation.navigation.settingsGraph
 
 @Composable
-fun MainShellScreen() {
+fun MainShellScreen(
+    navigateToOnboarding: () -> Unit
+) {
     val innerNavController = rememberNavController()
     val navBackStackEntry by innerNavController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -89,6 +92,7 @@ fun MainShellScreen() {
                 MainShellNavHost(
                     navController = innerNavController,
                     paddingValues = PaddingValues(0.dp),
+                    navigateToOnboarding = navigateToOnboarding,
                     modifier = Modifier.weight(1f).fillMaxHeight()
                 )
             }
@@ -96,6 +100,7 @@ fun MainShellScreen() {
             MainShellNavHost(
                 navController = innerNavController,
                 paddingValues = paddingValues,
+                navigateToOnboarding = navigateToOnboarding,
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -106,6 +111,7 @@ fun MainShellScreen() {
 private fun MainShellNavHost(
     navController: NavHostController,
     paddingValues: PaddingValues,
+    navigateToOnboarding: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -130,8 +136,9 @@ private fun MainShellNavHost(
         composable<PlaceholderRoutes.Lab> {
             PlaceholderDestination(item = NimbatNavigationItem.LAB, mainShellPadding = paddingValues)
         }
-        composable<PlaceholderRoutes.Settings> {
-            PlaceholderDestination(item = NimbatNavigationItem.SETTINGS, mainShellPadding = paddingValues)
-        }
+        settingsGraph(
+            mainShellPadding = paddingValues,
+            onNavigateToOnboarding = navigateToOnboarding
+        )
     }
 }

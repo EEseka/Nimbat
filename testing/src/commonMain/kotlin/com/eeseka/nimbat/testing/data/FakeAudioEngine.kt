@@ -22,8 +22,11 @@ class FakeAudioEngine : AudioEngine {
     var heard: List<FloatArray> = emptyList() // What the first recording hears before falling silent; later recordings hear only silence
     var isSpeakerHeard = true // Whether what play() plays reaches the microphone
     var microphoneError: AudioError? = null
+    var playError: AudioError? = null
     var loopError: AudioError? = null
     var isLooping = false
+        private set
+    var lastPlayed: FloatArray? = null
         private set
 
     private val speaker = MutableSharedFlow<FloatArray>(extraBufferCapacity = 16)
@@ -41,6 +44,8 @@ class FakeAudioEngine : AudioEngine {
     }
 
     override suspend fun play(samples: FloatArray): EmptyResult<AudioError> {
+        playError?.let { return Result.Failure(it) }
+        lastPlayed = samples
         if (isSpeakerHeard) speaker.emit(samples)
         return Result.Success(Unit)
     }

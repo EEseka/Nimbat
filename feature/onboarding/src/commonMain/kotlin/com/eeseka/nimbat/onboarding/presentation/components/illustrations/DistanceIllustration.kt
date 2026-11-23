@@ -20,9 +20,9 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawPhone
+import com.eeseka.nimbat.core.design_system.components.illustrations.rememberLoopProgress
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawPhone
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.rememberLoopProgress
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.min

@@ -13,11 +13,11 @@ import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawLaptop
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawPhone
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawTablet
+import com.eeseka.nimbat.core.design_system.components.illustrations.rememberLoopProgress
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawLaptop
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawPhone
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawTablet
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.rememberLoopProgress
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos

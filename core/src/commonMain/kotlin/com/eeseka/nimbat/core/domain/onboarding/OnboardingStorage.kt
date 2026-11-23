@@ -6,4 +6,5 @@ interface OnboardingStorage {
     val hasSeenOnboarding: Flow<Boolean>
 
     suspend fun setOnboardingCompleted()
+    suspend fun clear()
 }

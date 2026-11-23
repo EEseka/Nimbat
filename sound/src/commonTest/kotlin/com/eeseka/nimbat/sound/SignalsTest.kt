@@ -116,6 +116,13 @@ class SignalsTest {
         assertThat(tail.last()).isCloseTo(0f, 0.001f)
     }
 
+    @Test
+    fun `a sound at half volume swings half as far`() {
+        val quieter = atVolume(floatArrayOf(0.8f, -0.6f, 0f), volume = 0.5f)
+
+        assertThat(quieter.toList()).isEqualTo(listOf(0.4f, -0.3f, 0f))
+    }
+
     /** Counts how often the wave crosses from one side of 0 to the other: twice per cycle. */
     private fun zeroCrossings(samples: FloatArray, range: IntRange): Int =
         range.drop(1).count { (samples[it - 1] < 0f) != (samples[it] < 0f) }

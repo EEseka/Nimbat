@@ -1,3 +1,4 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -5,6 +6,17 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.androidMultiplatformLibrary)
+    alias(libs.plugins.buildkonfig)
+}
+
+buildkonfig {
+    packageName = "com.eeseka.nimbat"
+    objectName = "AppConfig"
+    exposeObjectWithName = "AppConfig"
+
+    defaultConfigs {
+        buildConfigField(STRING, "APP_VERSION", libs.versions.app.versionName.get())
+    }
 }
 
 kotlin {

@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Check
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Mic
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawIcon
+import com.eeseka.nimbat.core.design_system.components.illustrations.drawWave
+import com.eeseka.nimbat.core.design_system.components.illustrations.rememberLoopProgress
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawIcon
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.drawWave
-import com.eeseka.nimbat.onboarding.presentation.components.illustrations.util.rememberLoopProgress
 
 private const val WAVE_COUNT = 3
 

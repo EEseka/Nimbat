@@ -34,6 +34,4 @@
 
     <string name="name_title">Name this device</string>
     <string name="name_description">Other devices see this name when you connect.</string>
-    <string name="device_name">Device name</string>
-    <string name="device_name_placeholder">My device</string>
 </resources>
