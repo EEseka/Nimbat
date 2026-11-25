@@ -1,0 +1,30 @@
+<resources>
+    <string name="home">Home</string>
+
+    <string name="just_this_device">Just This Device</string>
+    <string name="with_another_device">With Another Device</string>
+
+    <string name="wave">Wave</string>
+    <string name="wave_description">Control things with a wave of your hand.</string>
+    <string name="guard">Guard</string>
+    <string name="guard_description">Get an alert when something moves nearby.</string>
+    <string name="breathe">Breathe</string>
+    <string name="breathe_description">Watch your breathing as a live wave.</string>
+    <string name="join">Join</string>
+    <string name="join_description">Got a code from another device? Join it by sound.</string>
+    <string name="how_far">How Far</string>
+    <string name="how_far_description">See the distance between two devices, live.</string>
+    <string name="find_it">Find It</string>
+    <string name="find_it_description">Get warmer or colder as you hunt a device down.</string>
+    <string name="measure">Measure</string>
+    <string name="measure_description">Measure and save lengths to within 3 cm.</string>
+    <string name="beam">Beam</string>
+    <string name="beam_description">Send a note or link through the air.</string>
+    <string name="room_map">Room Map</string>
+    <string name="room_map_description">See where three or more devices sit in the room.</string>
+
+    <string name="hearing_trouble">Hearing Trouble</string>
+    <string name="hearing_trouble_message">This device couldn't hear itself last time. Turn the device volume up and try somewhere quieter.</string>
+    <string name="check_again">Check Again</string>
+    <string name="listening">Listening…</string>
+</resources>
