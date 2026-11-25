@@ -34,6 +34,7 @@ plugins {
 }
 
 include(":core")
+include(":feature:home")
 include(":androidApp")
 include(":feature:main_shell")
 include(":feature:settings")

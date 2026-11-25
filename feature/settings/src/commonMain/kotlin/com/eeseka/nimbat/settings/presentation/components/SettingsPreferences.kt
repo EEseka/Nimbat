@@ -24,6 +24,7 @@ import com.composables.icons.lucide.CodeXml
 import com.composables.icons.lucide.Contrast
 import com.composables.icons.lucide.Crosshair
 import com.composables.icons.lucide.Ear
+import com.composables.icons.lucide.EarOff
 import com.composables.icons.lucide.ExternalLink
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Mic
@@ -177,9 +178,17 @@ private fun SoundSection(
         }
 
         SettingsRow(
-            icon = Lucide.Ear,
-            badgeColor = extended.lemonContainer,
-            onBadgeColor = extended.onLemonContainer,
+            icon = if (state.isSoundCheckPassed == false) Lucide.EarOff else Lucide.Ear,
+            badgeColor = when (state.isSoundCheckPassed) {
+                true -> extended.successContainer
+                false -> extended.warningContainer
+                null -> MaterialTheme.colorScheme.primaryContainer
+            },
+            onBadgeColor = when (state.isSoundCheckPassed) {
+                true -> extended.onSuccessContainer
+                false -> extended.onWarningContainer
+                null -> MaterialTheme.colorScheme.onPrimaryContainer
+            },
             title = stringResource(Res.string.sound_check),
             subtitle = stringResource(
                 when {
@@ -219,8 +228,8 @@ private fun SoundSection(
 
         SettingsRow(
             icon = Lucide.Thermometer,
-            badgeColor = extended.coralContainer,
-            onBadgeColor = extended.onCoralContainer,
+            badgeColor = extended.amberContainer,
+            onBadgeColor = extended.onAmberContainer,
             title = stringResource(Res.string.room_temperature),
             subtitle = when (units) {
                 MeasurementUnits.METRIC -> stringResource(Res.string.room_temperature_message, speed)
@@ -274,8 +283,8 @@ private fun SoundSection(
 
         SettingsRow(
             icon = Lucide.Crosshair,
-            badgeColor = extended.mintContainer,
-            onBadgeColor = extended.onMintContainer,
+            badgeColor = extended.tealContainer,
+            onBadgeColor = extended.onTealContainer,
             title = stringResource(Res.string.distance_offset),
             subtitle = stringResource(Res.string.distance_offset_message),
             index = firstIndex + 3,
@@ -285,8 +294,8 @@ private fun SoundSection(
 
         SettingsRow(
             icon = Lucide.Ruler,
-            badgeColor = extended.amberContainer,
-            onBadgeColor = extended.onAmberContainer,
+            badgeColor = extended.goldContainer,
+            onBadgeColor = extended.onGoldContainer,
             title = stringResource(Res.string.units),
             index = firstIndex + 4,
             count = count,
@@ -327,8 +336,8 @@ private fun AppearanceSection(
     SettingsSection(title = stringResource(Res.string.appearance)) {
         SettingsRow(
             icon = Lucide.Palette,
-            badgeColor = scheme.primaryContainer,
-            onBadgeColor = scheme.onPrimaryContainer,
+            badgeColor = scheme.inverseSurface,
+            onBadgeColor = scheme.inverseOnSurface,
             title = stringResource(Res.string.theme),
             index = 0,
             count = if (isDarkTheme) 2 else 1,
@@ -353,8 +362,8 @@ private fun AppearanceSection(
         ) {
             SettingsRow(
                 icon = Lucide.Contrast,
-                badgeColor = scheme.inverseSurface,
-                onBadgeColor = scheme.inverseOnSurface,
+                badgeColor = scheme.extended.indigoContainer,
+                onBadgeColor = scheme.extended.onIndigoContainer,
                 title = stringResource(Res.string.lights_out),
                 subtitle = stringResource(Res.string.lights_out_message),
                 index = 1,
@@ -384,8 +393,8 @@ private fun FeelSection(
     SettingsSection(title = stringResource(Res.string.feel)) {
         SettingsRow(
             icon = Lucide.Vibrate,
-            badgeColor = scheme.tertiaryContainer,
-            onBadgeColor = scheme.onTertiaryContainer,
+            badgeColor = scheme.extended.coralContainer,
+            onBadgeColor = scheme.extended.onCoralContainer,
             title = stringResource(Res.string.haptics),
             subtitle = stringResource(Res.string.haptics_message),
             index = 0,
@@ -410,8 +419,8 @@ private fun AboutSection(onSourceCodeClick: () -> Unit) {
     SettingsSection(title = stringResource(Res.string.about)) {
         SettingsRow(
             icon = Lucide.CodeXml,
-            badgeColor = scheme.secondaryContainer,
-            onBadgeColor = scheme.onSecondaryContainer,
+            badgeColor = scheme.primaryContainer,
+            onBadgeColor = scheme.onPrimaryContainer,
             title = stringResource(Res.string.source_code),
             subtitle = stringResource(Res.string.source_code_message),
             index = 0,

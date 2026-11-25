@@ -1,89 +1,79 @@
 package com.eeseka.nimbat.core.design_system.components.layouts
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedCard
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.eeseka.nimbat.core.design_system.components.textfields.NimbatText
+import com.eeseka.nimbat.core.design_system.components.util.AppHaptic
+import com.eeseka.nimbat.core.design_system.components.util.rememberAppHaptic
 import com.eeseka.nimbat.core.design_system.theme.NimbatTheme
-
-enum class NimbatCardStyle {
-    FILLED,
-    OUTLINED,
-    ELEVATED
-}
+import com.eeseka.nimbat.core.design_system.theme.extended
 
 @Composable
 fun NimbatCard(
     modifier: Modifier = Modifier,
-    style: NimbatCardStyle = NimbatCardStyle.FILLED,
-    shape: Shape = MaterialTheme.shapes.large,
+    containerColor: Color = MaterialTheme.colorScheme.surfaceContainer,
+    contentColor: Color = MaterialTheme.colorScheme.onSurface,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    when (style) {
-        NimbatCardStyle.FILLED -> {
-            if (onClick != null) {
-                Card(
-                    onClick = onClick,
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            } else {
-                Card(
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            }
-        }
+    val colors = CardDefaults.cardColors(containerColor = containerColor, contentColor = contentColor)
 
-        NimbatCardStyle.OUTLINED -> {
-            if (onClick != null) {
-                OutlinedCard(
-                    onClick = onClick,
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            } else {
-                OutlinedCard(
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            }
-        }
+    if (onClick != null) {
+        val hapticFeedback = rememberAppHaptic()
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed by interactionSource.collectIsPressedAsState()
+        val pressScale by animateFloatAsState(
+            targetValue = if (isPressed) 0.94f else 1f,
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessMedium
+            ),
+            label = "card_press"
+        )
 
-        NimbatCardStyle.ELEVATED -> {
-            if (onClick != null) {
-                ElevatedCard(
-                    onClick = onClick,
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            } else {
-                ElevatedCard(
-                    modifier = modifier,
-                    shape = shape,
-                    content = content
-                )
-            }
-        }
+        Card(
+            onClick = {
+                hapticFeedback(AppHaptic.ImpactLight)
+                onClick()
+            },
+            modifier = modifier.graphicsLayer {
+                scaleX = pressScale
+                scaleY = pressScale
+            },
+            shape = shape,
+            colors = colors,
+            interactionSource = interactionSource,
+            content = content
+        )
+    } else {
+        Card(
+            modifier = modifier,
+            shape = shape,
+            colors = colors,
+            content = content
+        )
     }
 }
 
@@ -97,20 +87,24 @@ private fun NimbatCardPreview() {
                 .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
         ) {
-            NimbatCardStyle.entries.forEach { style ->
-                NimbatCard(style = style) {
-                    NimbatText(
-                        text = "Hello World",
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(4.dp)
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    NimbatText(
-                        text = "This is a ${style.name} card",
-                        style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.padding(4.dp)
-                    )
-                }
+            NimbatCard(modifier = Modifier.fillMaxWidth()) {
+                NimbatText(
+                    text = "A plain card",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+            NimbatCard(
+                containerColor = MaterialTheme.colorScheme.extended.skyContainer,
+                contentColor = MaterialTheme.colorScheme.extended.onSkyContainer,
+                onClick = {},
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                NimbatText(
+                    text = "A pressable coloured card",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
         }
     }

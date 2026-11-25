@@ -27,14 +27,18 @@ data class ExtendedColors(
     val onWarningContainer: Color,
     val skyContainer: Color,
     val onSkyContainer: Color,
-    val amberContainer: Color,
-    val onAmberContainer: Color,
-    val mintContainer: Color,
-    val onMintContainer: Color,
     val coralContainer: Color,
     val onCoralContainer: Color,
-    val lemonContainer: Color,
-    val onLemonContainer: Color
+    val amberContainer: Color,
+    val onAmberContainer: Color,
+    val goldContainer: Color,
+    val onGoldContainer: Color,
+    val greenContainer: Color,
+    val onGreenContainer: Color,
+    val tealContainer: Color,
+    val onTealContainer: Color,
+    val indigoContainer: Color,
+    val onIndigoContainer: Color
 )
 
 val LightExtendedColors = ExtendedColors(
@@ -47,14 +51,18 @@ val LightExtendedColors = ExtendedColors(
     onWarningContainer = onWarningContainerLight,
     skyContainer = skyContainerLight,
     onSkyContainer = onSkyContainerLight,
-    amberContainer = amberContainerLight,
-    onAmberContainer = onAmberContainerLight,
-    mintContainer = mintContainerLight,
-    onMintContainer = onMintContainerLight,
     coralContainer = coralContainerLight,
     onCoralContainer = onCoralContainerLight,
-    lemonContainer = lemonContainerLight,
-    onLemonContainer = onLemonContainerLight
+    amberContainer = amberContainerLight,
+    onAmberContainer = onAmberContainerLight,
+    goldContainer = goldContainerLight,
+    onGoldContainer = onGoldContainerLight,
+    greenContainer = greenContainerLight,
+    onGreenContainer = onGreenContainerLight,
+    tealContainer = tealContainerLight,
+    onTealContainer = onTealContainerLight,
+    indigoContainer = indigoContainerLight,
+    onIndigoContainer = onIndigoContainerLight
 )
 
 val DarkExtendedColors = ExtendedColors(
@@ -67,14 +75,18 @@ val DarkExtendedColors = ExtendedColors(
     onWarningContainer = onWarningContainerDark,
     skyContainer = skyContainerDark,
     onSkyContainer = onSkyContainerDark,
-    amberContainer = amberContainerDark,
-    onAmberContainer = onAmberContainerDark,
-    mintContainer = mintContainerDark,
-    onMintContainer = onMintContainerDark,
     coralContainer = coralContainerDark,
     onCoralContainer = onCoralContainerDark,
-    lemonContainer = lemonContainerDark,
-    onLemonContainer = onLemonContainerDark
+    amberContainer = amberContainerDark,
+    onAmberContainer = onAmberContainerDark,
+    goldContainer = goldContainerDark,
+    onGoldContainer = onGoldContainerDark,
+    greenContainer = greenContainerDark,
+    onGreenContainer = onGreenContainerDark,
+    tealContainer = tealContainerDark,
+    onTealContainer = onTealContainerDark,
+    indigoContainer = indigoContainerDark,
+    onIndigoContainer = onIndigoContainerDark
 )
 
 val LightScheme = lightColorScheme(

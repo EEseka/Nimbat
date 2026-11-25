@@ -28,7 +28,7 @@ class DataStoreOnboardingStorage(
 
     override suspend fun clear() {
         dataStore.edit { preferences ->
-            preferences.remove(HAS_SEEN_ONBOARDING_KEY)
+            preferences -= HAS_SEEN_ONBOARDING_KEY
         }
     }
 }

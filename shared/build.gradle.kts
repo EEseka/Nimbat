@@ -56,6 +56,7 @@ kotlin {
             implementation(projects.core)
             implementation(projects.feature.onboarding)
             implementation(projects.feature.mainShell)
+            implementation(projects.feature.home)
             implementation(projects.feature.settings)
         }
 

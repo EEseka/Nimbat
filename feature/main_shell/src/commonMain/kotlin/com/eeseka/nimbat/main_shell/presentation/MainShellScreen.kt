@@ -28,6 +28,7 @@ import com.eeseka.nimbat.core.design_system.components.util.AppHaptic
 import com.eeseka.nimbat.core.design_system.components.util.rememberAppHaptic
 import com.eeseka.nimbat.core.domain.util.PlatformUtils.isIOS
 import com.eeseka.nimbat.core.presentation.util.currentDeviceConfiguration
+import com.eeseka.nimbat.home.presentation.navigation.homeGraph
 import com.eeseka.nimbat.main_shell.presentation.components.NimbatBottomBar
 import com.eeseka.nimbat.main_shell.presentation.components.NimbatNavigationRail
 import com.eeseka.nimbat.main_shell.presentation.components.PlaceholderDestination
@@ -130,9 +131,10 @@ private fun MainShellNavHost(
             if (isIOS()) ExitTransition.None else fadeOut(tween(durationMillis = 90))
         }
     ) {
-        composable<PlaceholderRoutes.Home> {
-            PlaceholderDestination(item = NimbatNavigationItem.HOME, mainShellPadding = paddingValues)
-        }
+        homeGraph(
+            navController = navController,
+            mainShellPadding = paddingValues
+        )
         composable<PlaceholderRoutes.Lab> {
             PlaceholderDestination(item = NimbatNavigationItem.LAB, mainShellPadding = paddingValues)
         }

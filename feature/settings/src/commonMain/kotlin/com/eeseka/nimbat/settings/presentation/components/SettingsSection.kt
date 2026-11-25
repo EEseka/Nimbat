@@ -177,8 +177,8 @@ private fun SettingsSectionPreview() {
             SettingsSection(title = "All") {
                 SettingsRow(
                     icon = Lucide.Thermometer,
-                    badgeColor = MaterialTheme.colorScheme.extended.coralContainer,
-                    onBadgeColor = MaterialTheme.colorScheme.extended.onCoralContainer,
+                    badgeColor = MaterialTheme.colorScheme.extended.amberContainer,
+                    onBadgeColor = MaterialTheme.colorScheme.extended.onAmberContainer,
                     title = "Room Temperature",
                     subtitle = "Sound moves at 343 m/s at this temperature.",
                     index = 0,
@@ -187,8 +187,8 @@ private fun SettingsSectionPreview() {
                 )
                 SettingsRow(
                     icon = Lucide.Vibrate,
-                    badgeColor = MaterialTheme.colorScheme.tertiaryContainer,
-                    onBadgeColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                    badgeColor = MaterialTheme.colorScheme.extended.coralContainer,
+                    onBadgeColor = MaterialTheme.colorScheme.extended.onCoralContainer,
                     title = "Haptics",
                     index = 1,
                     count = 2,

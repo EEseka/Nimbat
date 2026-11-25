@@ -132,15 +132,15 @@ class DataStoreAppPreferences(
 
     override suspend fun clear() {
         dataStore.edit { preferences ->
-            preferences.remove(THEME_PREFERENCE_KEY)
-            preferences.remove(PURE_BLACK_ENABLED_KEY)
-            preferences.remove(HAPTICS_ENABLED_KEY)
-            preferences.remove(DEVICE_NAME_KEY)
-            preferences.remove(ROOM_TEMPERATURE_CELSIUS_KEY)
-            preferences.remove(VOLUME_KEY)
-            preferences.remove(DISTANCE_OFFSET_METERS_KEY)
-            preferences.remove(MEASUREMENT_UNITS_KEY)
-            preferences.remove(SOUND_CHECK_PASSED_KEY)
+            preferences -= THEME_PREFERENCE_KEY
+            preferences -= PURE_BLACK_ENABLED_KEY
+            preferences -= HAPTICS_ENABLED_KEY
+            preferences -= DEVICE_NAME_KEY
+            preferences -= ROOM_TEMPERATURE_CELSIUS_KEY
+            preferences -= VOLUME_KEY
+            preferences -= DISTANCE_OFFSET_METERS_KEY
+            preferences -= MEASUREMENT_UNITS_KEY
+            preferences -= SOUND_CHECK_PASSED_KEY
         }
     }
 }

@@ -4,8 +4,5 @@ import kotlinx.serialization.Serializable
 
 sealed interface PlaceholderRoutes {
     @Serializable
-    data object Home : PlaceholderRoutes
-
-    @Serializable
     data object Lab : PlaceholderRoutes
 }
