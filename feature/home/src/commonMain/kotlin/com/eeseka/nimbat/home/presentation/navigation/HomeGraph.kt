@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.eeseka.nimbat.home.presentation.HomeRoot
 import com.eeseka.nimbat.home.presentation.components.FeaturePlaceholder
 import com.eeseka.nimbat.home.presentation.model.HomeFeature
+import com.eeseka.nimbat.wave.presentation.WaveRoot
 
 fun NavGraphBuilder.homeGraph(
     navController: NavController,
@@ -21,8 +22,17 @@ fun NavGraphBuilder.homeGraph(
             HomeRoot(
                 mainShellPadding = mainShellPadding,
                 navigateToFeature = { feature ->
-                    navController.navigate(HomeGraphRoutes.FeaturePlaceholder(featureName = feature.name))
+                    when (feature) {
+                        HomeFeature.WAVE -> navController.navigate(HomeGraphRoutes.Wave)
+                        else -> navController.navigate(HomeGraphRoutes.FeaturePlaceholder(featureName = feature.name))
+                    }
                 }
+            )
+        }
+
+        composable<HomeGraphRoutes.Wave> {
+            WaveRoot(
+                navigateBack = { navController.navigateUp() }
             )
         }
 

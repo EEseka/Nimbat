@@ -1,11 +1,15 @@
 package com.eeseka.nimbat.core.data.di
 
+import com.eeseka.nimbat.core.data.audio.AudioGestureSensor
 import com.eeseka.nimbat.core.data.audio.AudioSoundChecker
 import com.eeseka.nimbat.core.data.onboarding.DataStoreOnboardingStorage
 import com.eeseka.nimbat.core.data.settings.DataStoreAppPreferences
+import com.eeseka.nimbat.core.data.wave.DataStoreWaveStorage
+import com.eeseka.nimbat.core.domain.audio.GestureSensor
 import com.eeseka.nimbat.core.domain.audio.SoundChecker
 import com.eeseka.nimbat.core.domain.onboarding.OnboardingStorage
 import com.eeseka.nimbat.core.domain.settings.AppPreferences
+import com.eeseka.nimbat.core.domain.wave.WaveStorage
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -17,5 +21,7 @@ val coreDataModule = module {
     includes(platformCoreDataModule)
     singleOf(::DataStoreOnboardingStorage) bind OnboardingStorage::class
     singleOf(::DataStoreAppPreferences) bind AppPreferences::class
+    singleOf(::DataStoreWaveStorage) bind WaveStorage::class
     single<SoundChecker> { AudioSoundChecker(audioEngine = get()) }
+    single<GestureSensor> { AudioGestureSensor(audioEngine = get(), appPreferences = get()) }
 }

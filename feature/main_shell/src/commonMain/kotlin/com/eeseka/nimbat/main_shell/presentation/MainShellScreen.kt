@@ -1,11 +1,16 @@
 package com.eeseka.nimbat.main_shell.presentation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -28,6 +33,7 @@ import com.eeseka.nimbat.core.design_system.components.util.AppHaptic
 import com.eeseka.nimbat.core.design_system.components.util.rememberAppHaptic
 import com.eeseka.nimbat.core.domain.util.PlatformUtils.isIOS
 import com.eeseka.nimbat.core.presentation.util.currentDeviceConfiguration
+import com.eeseka.nimbat.home.presentation.navigation.HomeGraphRoutes
 import com.eeseka.nimbat.home.presentation.navigation.homeGraph
 import com.eeseka.nimbat.main_shell.presentation.components.NimbatBottomBar
 import com.eeseka.nimbat.main_shell.presentation.components.NimbatNavigationRail
@@ -47,6 +53,12 @@ fun MainShellScreen(
 
     // iOS keeps its native tab bar at every size
     val showRail = currentDeviceConfiguration().isWideScreen && !isIOS()
+
+    val isNavigationBarVisible = remember(currentDestination) {
+        currentDestination?.hierarchy?.none {
+            it.hasRoute(HomeGraphRoutes.Wave::class) || it.hasRoute(HomeGraphRoutes.FeaturePlaceholder::class)
+        } ?: true
+    }
 
     val selectedItem = remember(currentDestination) {
         NimbatNavigationItem.entries.firstOrNull { item ->
@@ -76,19 +88,32 @@ fun MainShellScreen(
         applyHorizontalInsets = false,
         bottomBar = {
             if (!showRail) {
-                NimbatBottomBar(
-                    selectedItem = selectedItem,
-                    onItemSelected = onNavigate
-                )
+                // Can't animate native iOS components with Compose
+                AnimatedVisibility(
+                    visible = isNavigationBarVisible,
+                    enter = if (isIOS()) EnterTransition.None else slideInVertically { it } + fadeIn(),
+                    exit = if (isIOS()) ExitTransition.None else slideOutVertically { it } + fadeOut()
+                ) {
+                    NimbatBottomBar(
+                        selectedItem = selectedItem,
+                        onItemSelected = onNavigate
+                    )
+                }
             }
         }
     ) { paddingValues ->
         if (showRail) {
             Row(modifier = Modifier.fillMaxSize()) {
-                NimbatNavigationRail(
-                    selectedItem = selectedItem,
-                    onItemSelected = onNavigate
-                )
+                AnimatedVisibility(
+                    visible = isNavigationBarVisible,
+                    enter = expandHorizontally() + fadeIn(),
+                    exit = shrinkHorizontally() + fadeOut()
+                ) {
+                    NimbatNavigationRail(
+                        selectedItem = selectedItem,
+                        onItemSelected = onNavigate
+                    )
+                }
 
                 MainShellNavHost(
                     navController = innerNavController,

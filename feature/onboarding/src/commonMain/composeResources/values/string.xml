@@ -27,7 +27,7 @@
     <string name="sound_check_listening_description">Shh… your device is listening to itself.</string>
     <string name="sound_check_passed_description">Loud and clear! Your device is ready.</string>
     <string name="sound_check_passed_safari_description">Your device hears itself, but this browser hides some of its sounds from the microphone, so measuring distance and sending messages won't work here. Try a different browser for everything.</string>
-    <string name="sound_check_failed_description">Your device couldn't hear itself. Turn the device volume up and try somewhere quieter. You can still carry on, but some features may not work.</string>
+    <string name="sound_check_failed_description">Your device couldn't hear itself. Turn the device volume up, close anything else using the mic, like dictation or a call, and try somewhere quieter. You can still carry on, but some features may not work.</string>
     <string name="start_sound_check">Start sound check</string>
     <string name="listening">Listening…</string>
     <string name="try_again">Try again</string>
