@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
+import assertk.assertions.isGreaterThan
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isNotEmpty
 import assertk.assertions.isTrue
@@ -19,12 +20,15 @@ import com.eeseka.nimbat.sound.dopplerTone
 import com.eeseka.nimbat.testing.collectInBackground
 import com.eeseka.nimbat.testing.data.FakeAppPreferences
 import com.eeseka.nimbat.testing.data.FakeAudioEngine
+import com.eeseka.nimbat.testing.data.FakeWaveStorage
+import com.eeseka.nimbat.wave.presentation.model.BAT_X
 import com.eeseka.nimbat.wave.presentation.model.BatDashPhase
 import com.eeseka.nimbat.wave.presentation.model.CaveLane
 import com.eeseka.nimbat.wave.presentation.model.WaveDemo
 import com.eeseka.nimbat.wave.presentation.model.WaveSensorStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.TestResult
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -46,12 +50,14 @@ class WaveViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var audioEngine: FakeAudioEngine
+    private lateinit var waveStorage: FakeWaveStorage
 
     @BeforeTest
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
 
         audioEngine = FakeAudioEngine().apply { isSpeakerHeard = false }
+        waveStorage = FakeWaveStorage()
     }
 
     @AfterTest
@@ -264,6 +270,38 @@ class WaveViewModelTest {
     }
 
     @Test
+    fun `the saved best score shows in bat dash`() = waveTest { viewModel ->
+        waveStorage.setBestBatDashScore(12)
+
+        assertThat(viewModel.state.value.batDash.bestScore).isEqualTo(12)
+    }
+
+    @Test
+    fun `a new best score is saved`() = waveTest { viewModel ->
+        viewModel.onAction(WaveAction.OnDemoSelected(WaveDemo.BAT_DASH))
+        viewModel.onAction(WaveAction.OnCaveTap(CaveLane.HIGH))
+        viewModel.dodgeRocks(seconds = 10)
+
+        viewModel.onAction(WaveAction.OnScreenStopped)
+
+        assertThat(waveStorage.bestBatDashScore.first()).isGreaterThan(0)
+        assertThat(waveStorage.bestBatDashScore.first()).isEqualTo(viewModel.state.value.batDash.bestScore)
+    }
+
+    @Test
+    fun `a lower score keeps the saved best`() = waveTest { viewModel ->
+        waveStorage.setBestBatDashScore(50)
+        viewModel.onAction(WaveAction.OnDemoSelected(WaveDemo.BAT_DASH))
+        viewModel.onAction(WaveAction.OnCaveTap(CaveLane.HIGH))
+
+        viewModel.sendFrames(seconds = 20)
+
+        assertThat(viewModel.state.value.batDash.phase).isEqualTo(BatDashPhase.CRASHED)
+        assertThat(waveStorage.bestBatDashScore.first()).isEqualTo(50)
+        assertThat(viewModel.state.value.batDash.bestScore).isEqualTo(50)
+    }
+
+    @Test
     fun `a microphone taken mid-calibration starts over by itself`() = waveTest { viewModel ->
         // Like Siri taking the mic: a few blocks arrive, then the recording stops sending anything
         audioEngine.stallingRecordings = 1
@@ -343,14 +381,25 @@ class WaveViewModelTest {
                 appPreferences = FakeAppPreferences(),
                 soundDispatcher = testDispatcher
             ),
+            waveStorage = waveStorage
         )
         collectInBackground(viewModel.state)
         return viewModel
     }
 
-    /** What the screen sends while the game runs: a frame every 16 ms. */
     private fun WaveViewModel.sendFrames(seconds: Int) {
         repeat(seconds * 1_000 / 16) { frame -> onAction(WaveAction.OnBatDashFrame(frame * 16_000_000L)) }
+    }
+
+    private fun WaveViewModel.dodgeRocks(seconds: Int) {
+        repeat(seconds * 1_000 / 16) { frame ->
+            val game = state.value.batDash
+            val nextRock = game.rocks.filter { it.x > BAT_X }.minByOrNull { it.x }
+            if (nextRock?.lane == game.batLane) {
+                onAction(WaveAction.OnCaveTap(if (game.batLane == CaveLane.HIGH) CaveLane.LOW else CaveLane.HIGH))
+            }
+            onAction(WaveAction.OnBatDashFrame(frame * 16_000_000L))
+        }
     }
 
     private fun WaveViewModel.startListening() {

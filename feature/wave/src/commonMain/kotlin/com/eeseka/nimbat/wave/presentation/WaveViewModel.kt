@@ -5,11 +5,13 @@ import androidx.lifecycle.viewModelScope
 import com.eeseka.nimbat.core.domain.audio.AudioError
 import com.eeseka.nimbat.core.domain.audio.AudioErrorException
 import com.eeseka.nimbat.core.domain.audio.GestureSensor
+import com.eeseka.nimbat.core.domain.wave.WaveStorage
 import com.eeseka.nimbat.core.presentation.audio.mappers.toUiText
 import com.eeseka.nimbat.core.presentation.permissions.PermissionState
 import com.eeseka.nimbat.sound.Gesture
 import com.eeseka.nimbat.sound.GestureDirection
 import com.eeseka.nimbat.sound.GestureReading
+import com.eeseka.nimbat.wave.presentation.model.BatDash
 import com.eeseka.nimbat.wave.presentation.model.BatDashPhase
 import com.eeseka.nimbat.wave.presentation.model.CaveLane
 import com.eeseka.nimbat.wave.presentation.model.GalleryAnimal
@@ -40,7 +42,8 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class WaveViewModel(
-    private val gestureSensor: GestureSensor
+    private val gestureSensor: GestureSensor,
+    private val waveStorage: WaveStorage
 ) : ViewModel() {
 
     private companion object {
@@ -67,6 +70,7 @@ class WaveViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 observeGestures()
+                observeBestScore()
                 hasLoadedInitialData = true
             }
         }
@@ -114,6 +118,12 @@ class WaveViewModel(
             isStarted && isMicrophoneGranted
         }
             .flatMapLatest { isListening -> if (isListening) gestureReadings() else emptyFlow() }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeBestScore() {
+        waveStorage.bestBatDashScore
+            .onEach { best -> _state.update { it.copy(batDash = it.batDash.copy(bestScore = best)) } }
             .launchIn(viewModelScope)
     }
 
@@ -205,12 +215,23 @@ class WaveViewModel(
 
         if (before.phase == BatDashPhase.FLYING && after.phase == BatDashPhase.CRASHED) {
             viewModelScope.launch { eventChannel.send(WaveEvent.BatCrashed) }
+            saveIfBest(before, after)
         }
     }
 
     private fun landBat() {
         lastFrameNanos = null
-        _state.update { it.copy(batDash = it.batDash.land()) }
+        val before = _state.value.batDash
+        val after = before.land()
+        _state.update { it.copy(batDash = after) }
+        saveIfBest(before, after)
+    }
+
+    private fun saveIfBest(before: BatDash, after: BatDash) {
+        if (after.bestScore <= before.bestScore) return
+        viewModelScope.launch {
+            waveStorage.setBestBatDashScore(after.bestScore)
+        }
     }
 
     private fun onMicrophonePermissionChecked(permission: PermissionState) {

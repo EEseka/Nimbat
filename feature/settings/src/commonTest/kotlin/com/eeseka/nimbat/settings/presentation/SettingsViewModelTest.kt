@@ -21,6 +21,7 @@ import com.eeseka.nimbat.testing.collectInBackground
 import com.eeseka.nimbat.testing.data.FakeAppPreferences
 import com.eeseka.nimbat.testing.data.FakeAudioEngine
 import com.eeseka.nimbat.testing.data.FakeOnboardingStorage
+import com.eeseka.nimbat.testing.data.FakeWaveStorage
 import com.eeseka.nimbat.testing.typeText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,6 +43,7 @@ class SettingsViewModelTest {
 
     private lateinit var appPreferences: FakeAppPreferences
     private lateinit var onboardingStorage: FakeOnboardingStorage
+    private lateinit var waveStorage: FakeWaveStorage
     private lateinit var audioEngine: FakeAudioEngine
 
     @BeforeTest
@@ -50,6 +52,7 @@ class SettingsViewModelTest {
 
         appPreferences = FakeAppPreferences()
         onboardingStorage = FakeOnboardingStorage()
+        waveStorage = FakeWaveStorage()
         audioEngine = FakeAudioEngine()
     }
 
@@ -225,6 +228,7 @@ class SettingsViewModelTest {
         appPreferences.setDeviceName("Pixel")
         appPreferences.setTheme(AppTheme.DARK)
         onboardingStorage.setOnboardingCompleted()
+        waveStorage.setBestBatDashScore(12)
         val viewModel = createViewModel()
 
         viewModel.events.test {
@@ -239,6 +243,7 @@ class SettingsViewModelTest {
             assertThat(appPreferences.deviceName.first()).isNull()
             assertThat(appPreferences.theme.first()).isEqualTo(AppTheme.SYSTEM)
             assertThat(onboardingStorage.hasSeenOnboarding.first()).isFalse()
+            assertThat(waveStorage.bestBatDashScore.first()).isEqualTo(0)
         }
     }
 
@@ -269,6 +274,7 @@ class SettingsViewModelTest {
         val viewModel = SettingsViewModel(
             appPreferences = appPreferences,
             onboardingStorage = onboardingStorage,
+            waveStorage = waveStorage,
             audioEngine = audioEngine,
             soundChecker = AudioSoundChecker(audioEngine = audioEngine, soundDispatcher = testDispatcher)
         )
