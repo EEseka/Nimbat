@@ -20,7 +20,8 @@ class FakeAudioEngine : AudioEngine {
     }
 
     var heard: List<FloatArray> = emptyList() // What the first recording hears before falling silent; later recordings hear only silence
-    var isSpeakerHeard = true // Whether what play() plays reaches the microphone
+    var stallingRecordings = 0 // How many of the next recordings go quiet for good, like a mic another app took
+    var isSpeakerHeard = true
     var microphoneError: AudioError? = null
     var playError: AudioError? = null
     var loopError: AudioError? = null
@@ -36,6 +37,10 @@ class FakeAudioEngine : AudioEngine {
         val firstBlocks = heard
         heard = emptyList()
         firstBlocks.forEach { send(it) }
+        if (stallingRecordings > 0) {
+            stallingRecordings--
+            awaitCancellation()
+        }
         launch { speaker.collect { send(it) } }
         while (true) {
             delay(SILENT_BLOCK_GAP)

@@ -2,8 +2,17 @@ package com.eeseka.nimbat.sound
 
 import kotlin.math.sqrt
 
-/** How many mic samples each Doppler reading looks at: 4,096 ≈ 85 ms, so about 12 readings a second. */
+/** How many mic samples each Doppler reading looks at: 4,096 ≈ 85 ms. */
 const val DOPPLER_BLOCK_SIZE = 4_096
+
+/**
+ * How far each reading moves on from the last: half a block, so readings overlap and arrive every ≈ 43 ms
+ * (about 23 a second). Overlap makes readings more frequent; it can't make the FFT slots any narrower.
+ */
+const val DOPPLER_HOP = DOPPLER_BLOCK_SIZE / 2
+
+/** The pass mark for [toneClarityDb]: half of the 40 dB a clean hearing scores, so quiet speakers still pass and hiss (under 10) can't. */
+const val TONE_CLEAR_DB = 20.0
 
 /** The FFT slot the Doppler tone sits in. */
 private const val CARRIER_SLOT = 1_621
@@ -33,8 +42,14 @@ private const val SLOT_HZ = SAMPLE_RATE.toDouble() / DOPPLER_BLOCK_SIZE
  * What one block heard moving. [towardDb] and [awayDb] are how loud the echoes from things moving
  * toward and away from the device are, compared with the tone itself (−40 dB = 100× quieter).
  * [speedMetersPerSecond] is their average speed: positive toward, negative away.
+ * [toneClarityDb] is how far the tone itself stands above the background hiss: when the tone isn't heard, the echo levels mean nothing.
  */
-data class Motion(val towardDb: Double, val awayDb: Double, val speedMetersPerSecond: Double)
+data class Motion(
+    val towardDb: Double,
+    val awayDb: Double,
+    val speedMetersPerSecond: Double,
+    val toneClarityDb: Double,
+)
 
 /** What the device plays on repeat while sensing: one block of the Doppler tone. */
 fun dopplerTone(): FloatArray = loopingTone(cycles = CARRIER_SLOT, sampleCount = DOPPLER_BLOCK_SIZE)
@@ -79,12 +94,14 @@ fun motion(block: FloatArray, temperatureC: Double = DEFAULT_TEMPERATURE_C): Mot
         towardDb = relativeDb(towardPower, carrierPower),
         awayDb = relativeDb(awayPower, carrierPower),
         speedMetersPerSecond = speedForShift(averageShiftHz, temperatureC = temperatureC),
+        toneClarityDb = clarityDb(power),
     )
 }
 
 /** How far [dopplerTone] stands above the background hiss around it, in dB. */
-fun toneClarityDb(block: FloatArray): Double {
-    val power = slotPowers(block)
+fun toneClarityDb(block: FloatArray): Double = clarityDb(slotPowers(block))
+
+private fun clarityDb(power: DoubleArray): Double {
     val background = (BACKGROUND_NEAREST_SLOT..BACKGROUND_FARTHEST_SLOT)
         .sumOf { power[CARRIER_SLOT + it] + power[CARRIER_SLOT - it] } /
         (2 * (BACKGROUND_FARTHEST_SLOT - BACKGROUND_NEAREST_SLOT + 1))

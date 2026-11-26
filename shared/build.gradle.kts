@@ -58,6 +58,7 @@ kotlin {
             implementation(projects.feature.mainShell)
             implementation(projects.feature.home)
             implementation(projects.feature.settings)
+            implementation(projects.feature.wave)
         }
 
         commonTest.dependencies {

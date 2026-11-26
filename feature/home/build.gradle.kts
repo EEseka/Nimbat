@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.kotlinx.collections.immutable)
 
             implementation(projects.core)
+            implementation(projects.feature.wave)
         }
 
         commonTest.dependencies {

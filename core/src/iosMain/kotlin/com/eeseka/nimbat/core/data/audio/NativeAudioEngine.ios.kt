@@ -194,6 +194,7 @@ actual class NativeAudioEngine(
                 )
             }
             if (!isConfigured) return false
+            attempt { error -> session.setAllowHapticsAndSystemSoundsDuringRecording(true, error) }
             // Only a preference; the mic's rate check catches a refusal
             attempt { error -> session.setPreferredSampleRate(SAMPLE_RATE.toDouble(), error) }
 

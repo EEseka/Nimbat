@@ -78,6 +78,14 @@ class DopplerTest {
     }
 
     @Test
+    fun `motion reports how clearly the tone was heard`() {
+        val tone = dopplerTone()
+        val heard = hiss(loudness = 0.01).also { hiss -> hiss.indices.forEach { hiss[it] += tone[it] } }
+
+        assertThat(motion(heard).toneClarityDb).isEqualTo(toneClarityDb(heard))
+    }
+
+    @Test
     fun `hiss alone has no clear tone`() {
         assertThat(toneClarityDb(hiss(loudness = 0.01))).isLessThan(10.0)
     }

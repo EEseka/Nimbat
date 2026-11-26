@@ -10,5 +10,8 @@ sealed interface HomeGraphRoutes {
     data object Home : HomeGraphRoutes
 
     @Serializable
+    data object Wave : HomeGraphRoutes
+
+    @Serializable
     data class FeaturePlaceholder(val featureName: String) : HomeGraphRoutes
 }

@@ -4,6 +4,7 @@ import com.eeseka.nimbat.core.data.di.coreDataModule
 import com.eeseka.nimbat.home.presentation.di.homePresentationModule
 import com.eeseka.nimbat.onboarding.presentation.di.onboardingPresentationModule
 import com.eeseka.nimbat.settings.presentation.di.settingsPresentationModule
+import com.eeseka.nimbat.wave.presentation.di.wavePresentationModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
@@ -15,6 +16,7 @@ fun initKoin(config: KoinAppDeclaration? = null) {
             coreDataModule,
             onboardingPresentationModule,
             homePresentationModule,
+            wavePresentationModule,
             settingsPresentationModule
         )
     }

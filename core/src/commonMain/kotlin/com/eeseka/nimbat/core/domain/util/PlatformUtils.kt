@@ -4,4 +4,5 @@ expect object PlatformUtils {
     fun isIOS(): Boolean
     fun isMacSafari(): Boolean
     fun hasHaptics(): Boolean
+    fun isComputer(): Boolean
 }

@@ -12,6 +12,7 @@ import com.eeseka.nimbat.core.domain.util.onSuccess
 import com.eeseka.nimbat.sound.DOPPLER_BLOCK_SIZE
 import com.eeseka.nimbat.sound.Finder
 import com.eeseka.nimbat.sound.Role
+import com.eeseka.nimbat.sound.TONE_CLEAR_DB
 import com.eeseka.nimbat.sound.UP_CHIRP
 import com.eeseka.nimbat.sound.dopplerTone
 import com.eeseka.nimbat.sound.pairSamples
@@ -33,8 +34,6 @@ class AudioSoundChecker(
 ) : SoundChecker {
 
     private companion object {
-        /** The pass mark: half of the 40 dB a clean hearing scores, so quiet speakers still pass and hiss (under 10) can't. */
-        const val TONE_CLEAR_DB = 20.0
         /** Needing several clear readings in a row stops one lucky reading from passing; three take about a quarter of a second. */
         const val TONE_CLEAR_READINGS_IN_A_ROW = 3
         /** The clarity ring fills at this score. */

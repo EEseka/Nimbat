@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.vector.VectorPainter
+import com.eeseka.nimbat.core.domain.util.PlatformUtils
 import com.eeseka.nimbat.core.presentation.util.DeviceConfiguration
 
 @Composable
@@ -83,10 +84,10 @@ fun DrawScope.drawDevice(
     height: Float,
     body: Color,
     screen: Color
-) = when (configuration) {
-    DeviceConfiguration.MOBILE_PORTRAIT, DeviceConfiguration.MOBILE_LANDSCAPE -> drawPhone(center, height, body, screen)
-    DeviceConfiguration.TABLET_PORTRAIT, DeviceConfiguration.TABLET_LANDSCAPE -> drawTablet(center, height, body, screen)
-    DeviceConfiguration.DESKTOP -> drawLaptop(center, height * 1.2f, body, screen)
+) = when {
+    PlatformUtils.isComputer() -> drawLaptop(center, height * 1.2f, body, screen)
+    configuration.isMobile -> drawPhone(center, height, body, screen)
+    else -> drawTablet(center, height, body, screen)
 }
 
 fun DrawScope.drawHand(center: Offset, height: Float, color: Color) {

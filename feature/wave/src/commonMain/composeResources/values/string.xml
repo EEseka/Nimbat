@@ -1,0 +1,68 @@
+<resources>
+    <string name="wave">Wave</string>
+    <string name="back">Back</string>
+
+    <string name="slides">Slides</string>
+    <string name="gallery">Gallery</string>
+    <string name="bat_dash">Bat Dash</string>
+
+    <string name="hold_still">Hold Still…</string>
+    <string name="hold_still_message">Set your device down and keep still while Wave learns how your room sounds.</string>
+    <string name="hold_still_message_upright">Keep still while Wave learns how your room sounds.</string>
+    <string name="slides_hint">Hold your hand over the screen. Push toward it for the next slide, or pull away to go back.</string>
+    <string name="slides_hint_upright">Hold your hand in front of the screen. Push toward it for the next slide, or pull back to go back.</string>
+    <string name="gallery_hint">Hold your hand over the screen. Push toward it for the next photo, or pull away to go back.</string>
+    <string name="gallery_hint_upright">Hold your hand in front of the screen. Push toward it for the next photo, or pull back to go back.</string>
+    <string name="bat_dash_hint">Lift your hand to fly over rocks. Push down to duck under the ones hanging from the roof. Tapping works too.</string>
+    <string name="bat_dash_hint_upright">Pull your hand back to fly over rocks. Push toward the screen to duck under the ones hanging from the roof. Clicking works too.</string>
+    <string name="cant_hear_tone">Can't Hear the Tone</string>
+    <string name="cant_hear_tone_message">Turn the device volume up, keep the speaker and mic uncovered, and close anything else using the mic, like dictation or a call.</string>
+    <string name="stopped_listening">Wave Stopped Listening</string>
+    <string name="stopped_listening_message">Something interrupted the sound. Give it another go.</string>
+    <string name="try_again">Try Again</string>
+
+    <string name="microphone_blocked">Microphone Blocked</string>
+    <string name="microphone_blocked_message">Wave hears your hand through the echoes, so it needs the microphone.</string>
+    <string name="microphone_blocked_browser_message">Wave hears your hand through the echoes. Allow the microphone from the site settings next to the address bar, then come back.</string>
+    <string name="allow_microphone">Allow Microphone</string>
+    <string name="open_settings">Open Settings</string>
+
+    <string name="slide_count">%1$d of %2$d</string>
+
+    <string name="bat_dash_ready">Push, Pull or Tap to Fly</string>
+    <string name="bat_dash_crashed">Bonk!</string>
+    <string name="bat_dash_ready_upright">Push, Pull or Click to Fly</string>
+    <string name="bat_dash_again">Push, pull or tap to fly again</string>
+    <string name="bat_dash_again_upright">Push, pull or click to fly again</string>
+    <string name="bat_dash_best">Best %1$d</string>
+    <string name="bat_dash_fly_up">Fly up</string>
+    <string name="bat_dash_fly_down">Fly down</string>
+
+    <string name="slide_hello_title">Your Hand Is the Remote</string>
+    <string name="slide_hello_body">Your device is humming a note right now. You can't hear it, but your hand is bouncing it straight back, and that echo is what turns these pages. So what's this secret note?</string>
+    <string name="slide_note_title">A Note Your Dog Hears</string>
+    <string name="slide_note_body">It buzzes 19,000 times a second. Kids can just about catch it, most grown-ups lost it years ago, and your dog hears it loud and clear. Silent to you, it flies out, hits everything in the room and comes back.</string>
+    <string name="slide_echo_title">Everything Echoes</string>
+    <string name="slide_echo_body">Walls, the table, your coffee mug: they all send the note back exactly as it left. Pretty boring, because they sit still. Your hand doesn't, and that's where the siren trick comes in.</string>
+    <string name="slide_siren_title">The Siren Trick</string>
+    <string name="slide_siren_body">Move your hand closer and its echo comes back a touch higher. Pull away and it drops. It's the same trick that bends an ambulance siren as it races past. Higher means toward, lower means away. The bend is tiny, though.</string>
+    <string name="slide_bend_title">Small Bend, Sharp Ears</string>
+    <string name="slide_bend_body">A quick flick of your hand bends the note by about half a percent, far too little for you to notice. Your device checks 23 times a second and only cares which way it bent: up means next, down means back. Clever, but hardly new.</string>
+    <string name="slide_bats_title">Bats Got There First</string>
+    <string name="slide_bats_body">Bats hunt in the dark this way, shouting and reading the echoes. Your device just learned the trick, with no camera, no internet and nothing saved, on the same Kotlin code for phones, laptops and browsers.</string>
+
+    <string name="animal_bat">Bat</string>
+    <string name="animal_bat_caption">A bat finds its way by shouting and listening for the echo. As it closes in on a moth, the shouts speed up to 200 a second. Some are louder than a rock concert, but far too high for us to hear.</string>
+    <string name="animal_dolphin">Dolphin</string>
+    <string name="animal_dolphin_caption">A dolphin clicks through the fatty bump on its forehead and hears the echo through its lower jaw. By sound alone, it can tell a hollow ball from a solid one.</string>
+    <string name="animal_moth">Tiger Moth</string>
+    <string name="animal_moth_caption">Some tiger moths click back at a hunting bat. The clicks jam its sonar, so the bat misses. A whole chase, start to finish, in sounds we will never hear.</string>
+    <string name="animal_owl">Barn Owl</string>
+    <string name="animal_owl_caption">That heart-shaped face funnels sound to its ears, and one ear sits higher than the other, so it hears up and down as well as left and right. That's how a barn owl catches a mouse in total darkness.</string>
+    <string name="animal_dog">Dog</string>
+    <string name="animal_dog_caption">Dogs hear up to about 45,000 vibrations a second, more than twice what we can, so Wave's note is easy for them. If yours tilts its head at your device, now you know why.</string>
+    <string name="animal_cat">Cat</string>
+    <string name="animal_cat_caption">A cat hears past 60,000 vibrations a second, even higher than a dog. Mice squeak up there, out of our range, and each ear swivels on its own to pin down exactly where the squeak came from.</string>
+    <string name="animal_elephant">Elephant</string>
+    <string name="animal_elephant_caption">Elephants rumble too low for us to hear, and the sound carries for kilometres. Some of it travels through the ground, and they pick it up with their feet.</string>
+</resources>

@@ -45,6 +45,9 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.compose.uiTooling)
         }
+        jvmMain.dependencies {
+            implementation(libs.jna.platform)
+        }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

@@ -1,8 +1,10 @@
 package com.eeseka.nimbat.core.data.di
 
+import com.eeseka.nimbat.core.data.audio.AudioGestureSensor
 import com.eeseka.nimbat.core.data.audio.AudioSoundChecker
 import com.eeseka.nimbat.core.data.onboarding.DataStoreOnboardingStorage
 import com.eeseka.nimbat.core.data.settings.DataStoreAppPreferences
+import com.eeseka.nimbat.core.domain.audio.GestureSensor
 import com.eeseka.nimbat.core.domain.audio.SoundChecker
 import com.eeseka.nimbat.core.domain.onboarding.OnboardingStorage
 import com.eeseka.nimbat.core.domain.settings.AppPreferences
@@ -18,4 +20,5 @@ val coreDataModule = module {
     singleOf(::DataStoreOnboardingStorage) bind OnboardingStorage::class
     singleOf(::DataStoreAppPreferences) bind AppPreferences::class
     single<SoundChecker> { AudioSoundChecker(audioEngine = get()) }
+    single<GestureSensor> { AudioGestureSensor(audioEngine = get(), appPreferences = get()) }
 }
