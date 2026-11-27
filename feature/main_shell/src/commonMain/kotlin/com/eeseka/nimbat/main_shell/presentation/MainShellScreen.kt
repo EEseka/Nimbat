@@ -56,7 +56,9 @@ fun MainShellScreen(
 
     val isNavigationBarVisible = remember(currentDestination) {
         currentDestination?.hierarchy?.none {
-            it.hasRoute(HomeGraphRoutes.Wave::class) || it.hasRoute(HomeGraphRoutes.FeaturePlaceholder::class)
+            it.hasRoute(HomeGraphRoutes.Wave::class) ||
+                it.hasRoute(HomeGraphRoutes.Guard::class) ||
+                it.hasRoute(HomeGraphRoutes.FeaturePlaceholder::class)
         } ?: true
     }
 

@@ -5,4 +5,5 @@ actual object PlatformUtils {
     actual fun isMacSafari(): Boolean = false
     actual fun hasHaptics(): Boolean = false
     actual fun isComputer(): Boolean = true
+    actual fun isWeb(): Boolean = false
 }

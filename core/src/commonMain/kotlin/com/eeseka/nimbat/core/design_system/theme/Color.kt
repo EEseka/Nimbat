@@ -58,6 +58,8 @@ val tealContainerLight = Color(0xFF0B7E72)
 val onTealContainerLight = Color(0xFFF0FDFA)
 val indigoContainerLight = Color(0xFF5457D6)
 val onIndigoContainerLight = Color(0xFFF5F5FF)
+val limeContainerLight = Color(0xFF4D7C0F)
+val onLimeContainerLight = Color(0xFFF7FEE7)
 
 val primaryDark = Color(0xFFE0B7FF)
 val onPrimaryDark = Color(0xFF4B007D)
@@ -115,6 +117,8 @@ val tealContainerDark = Color(0xFF0B7E72)
 val onTealContainerDark = Color(0xFFF0FDFA)
 val indigoContainerDark = Color(0xFF5457D6)
 val onIndigoContainerDark = Color(0xFFF5F5FF)
+val limeContainerDark = Color(0xFF4D7C0F)
+val onLimeContainerDark = Color(0xFFF7FEE7)
 
 // Pure black swaps only the dark surfaces; everything else stays dark
 val backgroundPureBlack = Color(0xFF000000)

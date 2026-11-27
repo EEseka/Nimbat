@@ -1,0 +1,11 @@
+<resources>
+    <string name="nimbat">Nimbat</string>
+    <string name="open_nimbat">Open Nimbat</string>
+    <string name="stop_guard">Stop Guard</string>
+    <string name="quit_nimbat">Quit Nimbat</string>
+    <string name="guard_counting_down">Guard: Counting Down</string>
+    <string name="guard_watching">Guard: Watching</string>
+    <string name="guard_alarm_ringing">Guard: Ringing</string>
+    <string name="guard_curtain_down">Guard: Curtain Down</string>
+    <string name="guard_stopped">Guard: Stopped</string>
+</resources>

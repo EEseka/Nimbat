@@ -53,7 +53,8 @@ private val partnerFeatures = persistentListOf(
     HomeFeature.FIND_IT,
     HomeFeature.MEASURE,
     HomeFeature.ROOM_MAP,
-    HomeFeature.BEAM
+    HomeFeature.BEAM,
+    HomeFeature.TRIPWIRE
 )
 
 @Composable

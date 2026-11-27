@@ -2,6 +2,7 @@ package com.eeseka.nimbat.settings.presentation
 
 import app.cash.turbine.test
 import assertk.assertThat
+import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFalse
 import assertk.assertions.isInstanceOf
@@ -10,6 +11,7 @@ import assertk.assertions.isNull
 import assertk.assertions.isTrue
 import com.eeseka.nimbat.core.data.audio.AudioSoundChecker
 import com.eeseka.nimbat.core.domain.audio.AudioError
+import com.eeseka.nimbat.core.domain.guard.model.GuardMode
 import com.eeseka.nimbat.core.domain.settings.AppTheme
 import com.eeseka.nimbat.core.domain.settings.MeasurementUnits
 import com.eeseka.nimbat.core.presentation.permissions.PermissionState
@@ -20,6 +22,7 @@ import com.eeseka.nimbat.sound.pairSamples
 import com.eeseka.nimbat.testing.collectInBackground
 import com.eeseka.nimbat.testing.data.FakeAppPreferences
 import com.eeseka.nimbat.testing.data.FakeAudioEngine
+import com.eeseka.nimbat.testing.data.FakeGuardStorage
 import com.eeseka.nimbat.testing.data.FakeOnboardingStorage
 import com.eeseka.nimbat.testing.data.FakeWaveStorage
 import com.eeseka.nimbat.testing.typeText
@@ -44,6 +47,7 @@ class SettingsViewModelTest {
     private lateinit var appPreferences: FakeAppPreferences
     private lateinit var onboardingStorage: FakeOnboardingStorage
     private lateinit var waveStorage: FakeWaveStorage
+    private lateinit var guardStorage: FakeGuardStorage
     private lateinit var audioEngine: FakeAudioEngine
 
     @BeforeTest
@@ -53,6 +57,7 @@ class SettingsViewModelTest {
         appPreferences = FakeAppPreferences()
         onboardingStorage = FakeOnboardingStorage()
         waveStorage = FakeWaveStorage()
+        guardStorage = FakeGuardStorage()
         audioEngine = FakeAudioEngine()
     }
 
@@ -229,6 +234,7 @@ class SettingsViewModelTest {
         appPreferences.setTheme(AppTheme.DARK)
         onboardingStorage.setOnboardingCompleted()
         waveStorage.setBestBatDashScore(12)
+        guardStorage.startSession(GuardMode.ALARM, startedAtMillis = 0L)
         val viewModel = createViewModel()
 
         viewModel.events.test {
@@ -244,6 +250,7 @@ class SettingsViewModelTest {
             assertThat(appPreferences.theme.first()).isEqualTo(AppTheme.SYSTEM)
             assertThat(onboardingStorage.hasSeenOnboarding.first()).isFalse()
             assertThat(waveStorage.bestBatDashScore.first()).isEqualTo(0)
+            assertThat(guardStorage.sessions.first()).isEmpty()
         }
     }
 
@@ -275,6 +282,7 @@ class SettingsViewModelTest {
             appPreferences = appPreferences,
             onboardingStorage = onboardingStorage,
             waveStorage = waveStorage,
+            guardStorage = guardStorage,
             audioEngine = audioEngine,
             soundChecker = AudioSoundChecker(audioEngine = audioEngine, soundDispatcher = testDispatcher)
         )

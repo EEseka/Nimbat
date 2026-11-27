@@ -51,6 +51,7 @@ kotlin {
 
             implementation(projects.core)
             implementation(projects.feature.wave)
+            implementation(projects.feature.guard)
         }
 
         commonTest.dependencies {

@@ -22,9 +22,11 @@
     <string name="beam_description">Send a note or link through the air.</string>
     <string name="room_map">Room Map</string>
     <string name="room_map_description">See where three or more devices sit in the room.</string>
+    <string name="tripwire">Tripwire</string>
+    <string name="tripwire_description">Know when someone walks between two devices.</string>
 
     <string name="hearing_trouble">Hearing Trouble</string>
-    <string name="hearing_trouble_message">This device couldn't hear itself last time. Turn the device volume up, close anything else using the mic, like dictation or a call, and try somewhere quieter.</string>
+    <string name="hearing_trouble_message">This device couldn't hear itself last time. Turn the device volume up, switch off voice isolation if your mic has it, close anything else using the mic, like dictation or a call, and try somewhere quieter.</string>
     <string name="check_again">Check Again</string>
     <string name="listening">Listening…</string>
 </resources>

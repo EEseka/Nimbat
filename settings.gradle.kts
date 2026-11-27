@@ -33,6 +33,7 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
+include(":feature:guard")
 include(":core")
 include(":feature:home")
 include(":androidApp")

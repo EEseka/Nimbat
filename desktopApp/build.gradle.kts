@@ -29,6 +29,10 @@ compose.desktop {
 
 dependencies {
     implementation(projects.shared)
+    implementation(projects.core)
+    implementation(projects.feature.guard)
+
+    implementation(libs.bundles.koin.common)
 
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.components.resources)

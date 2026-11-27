@@ -3,6 +3,7 @@ package com.eeseka.nimbat.core.data.di
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.eeseka.nimbat.core.data.audio.NativeAudioEngine
+import com.eeseka.nimbat.core.data.database.DatabaseFactory
 import com.eeseka.nimbat.core.data.device.NativeDeviceNameProvider
 import com.eeseka.nimbat.core.data.util.createDataStore
 import com.eeseka.nimbat.core.domain.audio.AudioEngine
@@ -16,4 +17,5 @@ actual val platformCoreDataModule = module {
     single<DataStore<Preferences>> { createDataStore(androidContext()) }
     singleOf(::NativeAudioEngine) bind AudioEngine::class
     singleOf(::NativeDeviceNameProvider) bind DeviceNameProvider::class
+    single { DatabaseFactory(androidContext()) }
 }

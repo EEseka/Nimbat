@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.composables.icons.lucide.ArrowLeftRight
+import com.composables.icons.lucide.DoorOpen
 import com.composables.icons.lucide.Hand
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPinned
@@ -33,6 +34,8 @@ import nimbat.feature.home.generated.resources.measure
 import nimbat.feature.home.generated.resources.measure_description
 import nimbat.feature.home.generated.resources.room_map
 import nimbat.feature.home.generated.resources.room_map_description
+import nimbat.feature.home.generated.resources.tripwire
+import nimbat.feature.home.generated.resources.tripwire_description
 import nimbat.feature.home.generated.resources.wave
 import nimbat.feature.home.generated.resources.wave_description
 import org.jetbrains.compose.resources.stringResource
@@ -49,6 +52,7 @@ fun HomeFeature.getTitle(): String = stringResource(
         HomeFeature.MEASURE -> Res.string.measure
         HomeFeature.BEAM -> Res.string.beam
         HomeFeature.ROOM_MAP -> Res.string.room_map
+        HomeFeature.TRIPWIRE -> Res.string.tripwire
     }
 )
 
@@ -64,6 +68,7 @@ fun HomeFeature.getDescription(): String = stringResource(
         HomeFeature.MEASURE -> Res.string.measure_description
         HomeFeature.BEAM -> Res.string.beam_description
         HomeFeature.ROOM_MAP -> Res.string.room_map_description
+        HomeFeature.TRIPWIRE -> Res.string.tripwire_description
     }
 )
 
@@ -77,6 +82,7 @@ fun HomeFeature.getIcon(): ImageVector = when (this) {
     HomeFeature.MEASURE -> Lucide.RulerDimensionLine
     HomeFeature.BEAM -> Lucide.Send
     HomeFeature.ROOM_MAP -> Lucide.MapPinned
+    HomeFeature.TRIPWIRE -> Lucide.DoorOpen
 }
 
 fun HomeFeature.getPulseMillis(): Int = 2_400 + ordinal * 180
@@ -95,6 +101,7 @@ fun HomeFeature.getAccentColor(): Color {
         HomeFeature.MEASURE -> scheme.extended.goldContainer
         HomeFeature.ROOM_MAP -> scheme.extended.indigoContainer
         HomeFeature.BEAM -> scheme.tertiaryContainer
+        HomeFeature.TRIPWIRE -> scheme.extended.limeContainer
     }
 }
 
@@ -112,5 +119,6 @@ fun HomeFeature.getOnAccentColor(): Color {
         HomeFeature.MEASURE -> scheme.extended.onGoldContainer
         HomeFeature.ROOM_MAP -> scheme.extended.onIndigoContainer
         HomeFeature.BEAM -> scheme.onTertiaryContainer
+        HomeFeature.TRIPWIRE -> scheme.extended.onLimeContainer
     }
 }

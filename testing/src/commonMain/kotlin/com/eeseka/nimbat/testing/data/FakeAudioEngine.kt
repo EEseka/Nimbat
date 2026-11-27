@@ -19,7 +19,8 @@ class FakeAudioEngine : AudioEngine {
         val SILENT_BLOCK_GAP = 85.milliseconds
     }
 
-    var heard: List<FloatArray> = emptyList() // What the first recording hears before falling silent; later recordings hear only silence
+    var heard: List<FloatArray> = emptyList() // What the first recording hears before falling back to [background]
+    var background = FloatArray(SILENT_BLOCK_SIZE) // What every recording hears on repeat after that: silence unless set
     var stallingRecordings = 0 // How many of the next recordings go quiet for good, like a mic another app took
     var isSpeakerHeard = true
     var microphoneError: AudioError? = null
@@ -28,6 +29,8 @@ class FakeAudioEngine : AudioEngine {
     var isLooping = false
         private set
     var lastPlayed: FloatArray? = null
+        private set
+    var lastLooped: FloatArray? = null
         private set
 
     private val speaker = MutableSharedFlow<FloatArray>(extraBufferCapacity = 16)
@@ -44,7 +47,7 @@ class FakeAudioEngine : AudioEngine {
         launch { speaker.collect { send(it) } }
         while (true) {
             delay(SILENT_BLOCK_GAP)
-            send(FloatArray(SILENT_BLOCK_SIZE))
+            send(background.copyOf())
         }
     }
 
@@ -57,6 +60,7 @@ class FakeAudioEngine : AudioEngine {
 
     override suspend fun loop(samples: FloatArray): EmptyResult<AudioError> {
         loopError?.let { return Result.Failure(it) }
+        lastLooped = samples
         isLooping = true
         try {
             awaitCancellation()

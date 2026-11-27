@@ -16,7 +16,7 @@
     <string name="bat_dash_hint">Lift your hand to fly over rocks. Push down to duck under the ones hanging from the roof. Tapping works too.</string>
     <string name="bat_dash_hint_upright">Pull your hand back to fly over rocks. Push toward the screen to duck under the ones hanging from the roof. Clicking works too.</string>
     <string name="cant_hear_tone">Can't Hear the Tone</string>
-    <string name="cant_hear_tone_message">Turn the device volume up, keep the speaker and mic uncovered, and close anything else using the mic, like dictation or a call.</string>
+    <string name="cant_hear_tone_message">Turn the device volume up, keep the speaker and mic uncovered, switch off voice isolation if your mic has it, and close anything else using the mic, like dictation or a call.</string>
     <string name="stopped_listening">Wave Stopped Listening</string>
     <string name="stopped_listening_message">Something interrupted the sound. Give it another go.</string>
     <string name="try_again">Try Again</string>
