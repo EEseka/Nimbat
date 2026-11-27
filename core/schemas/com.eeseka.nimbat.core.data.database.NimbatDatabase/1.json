@@ -1,0 +1,134 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "bf783b177b7344317f92c22580e499e2",
+    "entities": [
+      {
+        "tableName": "GuardSessionEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mode` TEXT NOT NULL, `startedAtMillis` INTEGER NOT NULL, `endedAtMillis` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mode",
+            "columnName": "mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAtMillis",
+            "columnName": "startedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endedAtMillis",
+            "columnName": "endedAtMillis",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_GuardSessionEntity_startedAtMillis",
+            "unique": false,
+            "columnNames": [
+              "startedAtMillis"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_GuardSessionEntity_startedAtMillis` ON `${TABLE_NAME}` (`startedAtMillis`)"
+          }
+        ]
+      },
+      {
+        "tableName": "GuardLogEntryEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `sessionId` INTEGER NOT NULL, `kind` TEXT NOT NULL, `atMillis` INTEGER NOT NULL, `durationMillis` INTEGER, `peakRiseDb` REAL, `direction` TEXT, FOREIGN KEY(`sessionId`) REFERENCES `GuardSessionEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "atMillis",
+            "columnName": "atMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "durationMillis",
+            "columnName": "durationMillis",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "peakRiseDb",
+            "columnName": "peakRiseDb",
+            "affinity": "REAL"
+          },
+          {
+            "fieldPath": "direction",
+            "columnName": "direction",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_GuardLogEntryEntity_sessionId",
+            "unique": false,
+            "columnNames": [
+              "sessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_GuardLogEntryEntity_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "GuardSessionEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bf783b177b7344317f92c22580e499e2')"
+    ]
+  }
+}

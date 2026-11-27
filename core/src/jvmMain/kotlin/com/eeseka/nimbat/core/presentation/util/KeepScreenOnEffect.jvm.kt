@@ -10,7 +10,7 @@ import com.sun.jna.platform.win32.WinBase
 import com.sun.jna.ptr.IntByReference
 
 private const val ASSERTION_LEVEL_ON = 255
-private const val AWAKE_REASON = "Wave is listening for your hand"
+private const val AWAKE_REASON = "Nimbat is listening"
 
 @Composable
 actual fun KeepScreenOnEffect() {

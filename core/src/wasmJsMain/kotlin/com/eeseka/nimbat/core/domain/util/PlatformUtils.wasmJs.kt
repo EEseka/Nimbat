@@ -11,6 +11,7 @@ actual object PlatformUtils {
     }
     actual fun hasHaptics(): Boolean = canVibrate() && maxTouchPoints() > 0
     actual fun isComputer(): Boolean = hasFinePointer()
+    actual fun isWeb(): Boolean = true
 }
 
 private fun userAgent(): String = js("navigator.userAgent")

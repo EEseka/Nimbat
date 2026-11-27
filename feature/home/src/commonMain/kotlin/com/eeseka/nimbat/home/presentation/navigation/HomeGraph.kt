@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.toRoute
+import com.eeseka.nimbat.guard.presentation.GuardRoot
 import com.eeseka.nimbat.home.presentation.HomeRoot
 import com.eeseka.nimbat.home.presentation.components.FeaturePlaceholder
 import com.eeseka.nimbat.home.presentation.model.HomeFeature
@@ -24,6 +25,7 @@ fun NavGraphBuilder.homeGraph(
                 navigateToFeature = { feature ->
                     when (feature) {
                         HomeFeature.WAVE -> navController.navigate(HomeGraphRoutes.Wave)
+                        HomeFeature.GUARD -> navController.navigate(HomeGraphRoutes.Guard)
                         else -> navController.navigate(HomeGraphRoutes.FeaturePlaceholder(featureName = feature.name))
                     }
                 }
@@ -32,6 +34,12 @@ fun NavGraphBuilder.homeGraph(
 
         composable<HomeGraphRoutes.Wave> {
             WaveRoot(
+                navigateBack = { navController.navigateUp() }
+            )
+        }
+
+        composable<HomeGraphRoutes.Guard> {
+            GuardRoot(
                 navigateBack = { navController.navigateUp() }
             )
         }

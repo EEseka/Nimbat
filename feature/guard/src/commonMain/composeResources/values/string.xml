@@ -1,0 +1,83 @@
+<resources>
+    <string name="guard">Guard</string>
+    <string name="back">Back</string>
+
+    <string name="alarm">Alarm</string>
+    <string name="silent">Silent</string>
+    <string name="curtain">Curtain</string>
+
+    <string name="alarm_title">Catch Anyone Moving</string>
+    <string name="alarm_body">Set your device down where you want to watch, tap Start and leave. If anything moves, the alarm goes off.</string>
+    <string name="alarm_body_upright">Leave your computer where you want to watch, click Start and leave. If anything moves, the alarm goes off.</string>
+    <string name="silent_title">See Who Came By</string>
+    <string name="silent_body">Set your device down where you want to watch, tap Start and leave. Nothing rings: every movement goes in the log for when you're back.</string>
+    <string name="silent_body_upright">Leave your computer where you want to watch, click Start and leave. Nothing rings: every movement goes in the log for when you're back.</string>
+    <string name="curtain_title">Hide Your Screen When You Leave</string>
+    <string name="curtain_body">Click Start and keep working. When you get up and go, a curtain covers your screen until you're back.</string>
+    <string name="curtain_body_web">Click Start and keep working. When you get up and go, a curtain covers this tab until you're back.</string>
+
+    <string name="lock_computer">Lock Computer</string>
+    <string name="lock_computer_message">Lock it too when the curtain falls. A Mac locks only if it asks for your password after sleep.</string>
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="turn_off">Turn Off</string>
+
+    <string name="walk_away">Walk Away</string>
+    <string name="walk_away_message">Guard starts watching when the count ends.</string>
+    <string name="hold_still">Hold Still…</string>
+    <string name="hold_still_message">Keep still while Guard learns how your room sounds.</string>
+    <string name="watching">Watching</string>
+    <string name="watching_message">If anything moves, the alarm goes off.</string>
+    <string name="watching_quietly">Watching Quietly</string>
+    <string name="watching_quietly_message">Every movement goes in the log.</string>
+    <plurals name="movement_count">
+        <item quantity="one">%1$d movement so far</item>
+        <item quantity="other">%1$d movements so far</item>
+    </plurals>
+    <string name="curtain_ready">Curtain Ready</string>
+    <string name="curtain_ready_message">Get up whenever you like. The curtain falls once you've gone.</string>
+
+    <string name="cant_hear_tone">Can't Hear the Tone</string>
+    <string name="cant_hear_tone_message">Turn the device volume up, keep the speaker and mic uncovered, switch off voice isolation if your mic has it, and close anything else using the mic, like dictation or a call.</string>
+    <string name="stopped_listening">Guard Stopped Listening</string>
+    <string name="stopped_listening_message">Something interrupted the sound. Give it another go.</string>
+    <string name="try_again">Try Again</string>
+
+    <string name="microphone_blocked">Microphone Blocked</string>
+    <string name="microphone_blocked_message">Guard notices movement through the echoes, so it needs the microphone.</string>
+    <string name="microphone_blocked_browser_message">Guard notices movement through the echoes. Allow the microphone from the site settings next to the address bar, then come back.</string>
+    <string name="allow_microphone">Allow Microphone</string>
+    <string name="open_settings">Open Settings</string>
+
+    <string name="something_moved">Something Moved</string>
+
+    <string name="away">Away</string>
+    <string name="away_message">Press any key or click to come back.</string>
+
+    <string name="log">Log</string>
+    <string name="log_kept">Keeps your last %1$d watches</string>
+    <string name="clear">Clear</string>
+    <string name="clear_log_title">Clear the Log?</string>
+    <string name="clear_log_message">Every watch and everything it noticed will be deleted.</string>
+    <string name="cancel">Cancel</string>
+    <string name="log_empty">Each watch and what it noticed shows up here.</string>
+
+    <string name="session_time_range">%1$s to %2$s</string>
+    <string name="session_running">Since %1$s</string>
+    <string name="all_quiet">All quiet</string>
+
+    <string name="movement">Movement</string>
+    <string name="alarm_went_off">Alarm</string>
+    <string name="tone_lost">Tone Lost</string>
+    <string name="walked_away">You Left</string>
+    <string name="came_closer">came closer</string>
+    <string name="moved_away">moved away</string>
+    <string name="seconds_short">%1$s s</string>
+    <string name="minutes_short">%1$d min</string>
+    <string name="tone_lost_details">Mic covered or busy</string>
+    <string name="walked_away_details">Back after %1$s</string>
+
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
+</resources>

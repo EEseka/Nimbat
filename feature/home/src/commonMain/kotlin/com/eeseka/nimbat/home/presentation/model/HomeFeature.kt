@@ -9,5 +9,6 @@ enum class HomeFeature {
     FIND_IT,
     MEASURE,
     BEAM,
-    ROOM_MAP
+    ROOM_MAP,
+    TRIPWIRE
 }

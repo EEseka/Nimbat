@@ -16,7 +16,7 @@
     <string name="sound_check">Sound Check</string>
     <string name="sound_check_not_run">Make sure this device can hear Nimbat's sounds.</string>
     <string name="sound_check_passed">This device hears itself clearly.</string>
-    <string name="sound_check_failed">This device couldn't hear itself last time. Turn the device volume up, close anything else using the mic, like dictation or a call, and try somewhere quieter.</string>
+    <string name="sound_check_failed">This device couldn't hear itself last time. Turn the device volume up, switch off voice isolation if your mic has it, close anything else using the mic, like dictation or a call, and try somewhere quieter.</string>
     <string name="sound_check_listening">Listening…</string>
     <string name="run">Run</string>
     <string name="room_temperature">Room Temperature</string>

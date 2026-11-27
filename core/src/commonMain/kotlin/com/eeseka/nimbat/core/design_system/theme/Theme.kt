@@ -38,7 +38,9 @@ data class ExtendedColors(
     val tealContainer: Color,
     val onTealContainer: Color,
     val indigoContainer: Color,
-    val onIndigoContainer: Color
+    val onIndigoContainer: Color,
+    val limeContainer: Color,
+    val onLimeContainer: Color
 )
 
 val LightExtendedColors = ExtendedColors(
@@ -62,7 +64,9 @@ val LightExtendedColors = ExtendedColors(
     tealContainer = tealContainerLight,
     onTealContainer = onTealContainerLight,
     indigoContainer = indigoContainerLight,
-    onIndigoContainer = onIndigoContainerLight
+    onIndigoContainer = onIndigoContainerLight,
+    limeContainer = limeContainerLight,
+    onLimeContainer = onLimeContainerLight
 )
 
 val DarkExtendedColors = ExtendedColors(
@@ -86,7 +90,9 @@ val DarkExtendedColors = ExtendedColors(
     tealContainer = tealContainerDark,
     onTealContainer = onTealContainerDark,
     indigoContainer = indigoContainerDark,
-    onIndigoContainer = onIndigoContainerDark
+    onIndigoContainer = onIndigoContainerDark,
+    limeContainer = limeContainerDark,
+    onLimeContainer = onLimeContainerDark
 )
 
 val LightScheme = lightColorScheme(

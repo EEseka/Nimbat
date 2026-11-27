@@ -14,6 +14,7 @@ import com.eeseka.nimbat.core.domain.settings.AppPreferences
 import com.eeseka.nimbat.core.domain.settings.AppTheme
 import com.eeseka.nimbat.core.domain.settings.MeasurementUnits
 import com.eeseka.nimbat.core.domain.util.PlatformUtils
+import com.eeseka.nimbat.core.domain.guard.GuardStorage
 import com.eeseka.nimbat.core.domain.wave.WaveStorage
 import com.eeseka.nimbat.core.presentation.audio.mappers.toUiText
 import com.eeseka.nimbat.core.presentation.device.mappers.toUiText
@@ -36,6 +37,7 @@ class SettingsViewModel(
     private val appPreferences: AppPreferences,
     private val onboardingStorage: OnboardingStorage,
     private val waveStorage: WaveStorage,
+    private val guardStorage: GuardStorage,
     private val audioEngine: AudioEngine,
     private val soundChecker: SoundChecker
 ) : ViewModel() {
@@ -279,6 +281,7 @@ class SettingsViewModel(
             appPreferences.clear()
             onboardingStorage.clear()
             waveStorage.clear()
+            guardStorage.clear()
             _state.update { it.copy(isClearingData = false) }
             eventChannel.send(SettingsEvent.DataCleared)
         }

@@ -1,5 +1,6 @@
 package com.eeseka.nimbat.sound
 
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 /** How many mic samples each Doppler reading looks at: 4,096 ≈ 85 ms. */
@@ -100,6 +101,14 @@ fun motion(block: FloatArray, temperatureC: Double = DEFAULT_TEMPERATURE_C): Mot
 
 /** How far [dopplerTone] stands above the background hiss around it, in dB. */
 fun toneClarityDb(block: FloatArray): Double = clarityDb(slotPowers(block))
+
+/** How many readings, one every [DOPPLER_HOP] samples, fit in [seconds]. */
+internal fun readingsFor(seconds: Double): Int = (seconds * SAMPLE_RATE / DOPPLER_HOP).roundToInt()
+
+/** How long [readings] readings last. */
+internal fun secondsFor(readings: Int): Double = readings.toDouble() * DOPPLER_HOP / SAMPLE_RATE
+
+internal fun Int.saturatingIncrement(): Int = if (this == Int.MAX_VALUE) this else this + 1
 
 private fun clarityDb(power: DoubleArray): Double {
     val background = (BACKGROUND_NEAREST_SLOT..BACKGROUND_FARTHEST_SLOT)
